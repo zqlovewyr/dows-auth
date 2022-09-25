@@ -2,6 +2,7 @@ package org.dows.auth.crud.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.swagger.annotations.Authorization;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.oauth2.core.*;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
@@ -18,10 +19,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+@RequiredArgsConstructor
 public class AuthorizationServiceImpl implements OAuth2AuthorizationService {
     private final AuthorizationRepository authorizationRepository;
     private final RegisteredClientRepository registeredClientRepository;
-
 
 
     @Override

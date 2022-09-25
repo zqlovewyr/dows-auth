@@ -15,7 +15,7 @@
 
     <modules>
         <module>auth-api</module>
-        <module>auth-app</module>
+        <module>auth-application</module>
         <module>auth-biz</module>
         <module>auth-crud</module>
         <module>auth-config</module>

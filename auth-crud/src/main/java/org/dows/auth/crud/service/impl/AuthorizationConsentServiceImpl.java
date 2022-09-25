@@ -1,5 +1,6 @@
 package org.dows.auth.crud.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,6 +14,7 @@ import org.springframework.util.StringUtils;
 import java.util.HashSet;
 import java.util.Set;
 
+@RequiredArgsConstructor
 public class AuthorizationConsentServiceImpl implements OAuth2AuthorizationConsentService {
 
 
