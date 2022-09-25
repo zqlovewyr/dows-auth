@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dows.auth.crud.dao.OauthScopeDao">
+
+    <resultMap type="org.dows.auth.crud.entity.OauthScope" id="OauthScopeMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="clientId" column="client_id" jdbcType="VARCHAR"/>
+        <result property="scope" column="scope" jdbcType="VARCHAR"/>
+        <result property="descr" column="descr" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into dows_uim.oauth_scope(client_id, scope, descr, status, deleted, dt)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.clientId}, #{entity.scope}, #{entity.descr}, #{entity.status}, #{entity.deleted}, #{entity.dt})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into dows_uim.oauth_scope(client_id, scope, descr, status, deleted, dt)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.clientId}, #{entity.scope}, #{entity.descr}, #{entity.status}, #{entity.deleted}, #{entity.dt})
+        </foreach>
+        on duplicate key update
+        client_id = values(client_id) , scope = values(scope) , descr = values(descr) , status = values(status) ,
+        deleted = values(deleted) , dt = values(dt)
+    </insert>
+
+</mapper>
+

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dows.auth.crud.dao.OauthClientDao">
+
+    <resultMap type="org.dows.auth.crud.entity.OauthClient" id="OauthClientMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="clientId" column="client_id" jdbcType="VARCHAR"/>
+        <result property="clientName" column="client_name" jdbcType="VARCHAR"/>
+        <result property="clientSecret" column="client_secret" jdbcType="VARCHAR"/>
+        <result property="nameLetters" column="name_letters" jdbcType="VARCHAR"/>
+        <result property="clientSecretExpiresAt" column="client_secret_expires_at" jdbcType="TIMESTAMP"/>
+        <result property="clientIdIssuedAt" column="client_id_issued_at" jdbcType="TIMESTAMP"/>
+        <result property="dt" column="dt" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into dows_uim.oauth_client(client_id, client_name, client_secret, name_letters, client_secret_expires_at,
+        client_id_issued_at, dt, deleted)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.clientId}, #{entity.clientName}, #{entity.clientSecret}, #{entity.nameLetters},
+            #{entity.clientSecretExpiresAt}, #{entity.clientIdIssuedAt}, #{entity.dt}, #{entity.deleted})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into dows_uim.oauth_client(client_id, client_name, client_secret, name_letters, client_secret_expires_at,
+        client_id_issued_at, dt, deleted)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.clientId}, #{entity.clientName}, #{entity.clientSecret}, #{entity.nameLetters},
+            #{entity.clientSecretExpiresAt}, #{entity.clientIdIssuedAt}, #{entity.dt}, #{entity.deleted})
+        </foreach>
+        on duplicate key update
+        client_id = values(client_id) , client_name = values(client_name) , client_secret = values(client_secret) ,
+        name_letters = values(name_letters) , client_secret_expires_at = values(client_secret_expires_at) ,
+        client_id_issued_at = values(client_id_issued_at) , dt = values(dt) , deleted = values(deleted)
+    </insert>
+
+</mapper>
+
