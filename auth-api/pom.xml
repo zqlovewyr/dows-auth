@@ -5,7 +5,7 @@
     <parent>
         <artifactId>dows-auth</artifactId>
         <groupId>org.dows.cloud</groupId>
-        <version>20220701</version>
+        <version>20220701-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>auth-api</artifactId>
