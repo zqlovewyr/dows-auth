@@ -11,19 +11,21 @@
     <artifactId>auth-crud</artifactId>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-client</artifactId>
+            <groupId>org.dows.framework</groupId>
+            <artifactId>crud-mybatis</artifactId>
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>2.5.2.RELEASE</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-authorization-server</artifactId>
+            <artifactId>spring-security-jwt</artifactId>
+            <version>1.1.1.RELEASE</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.dows.cloud</groupId>
-            <artifactId>account-biz</artifactId>
-        </dependency>
     </dependencies>
 
 

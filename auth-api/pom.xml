@@ -11,8 +11,8 @@
     <artifactId>auth-api</artifactId>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-authorization-server</artifactId>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>auth-pojo</artifactId>
         </dependency>
     </dependencies>
 

@@ -11,8 +11,12 @@
     <artifactId>auth-biz</artifactId>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-authorization-server</artifactId>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>auth-crud</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>auth-api</artifactId>
         </dependency>
     </dependencies>
 
