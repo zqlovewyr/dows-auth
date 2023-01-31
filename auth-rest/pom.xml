@@ -14,8 +14,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>auth-biz</artifactId>
+            <version>20220701-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

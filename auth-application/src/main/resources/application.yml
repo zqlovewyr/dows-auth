@@ -1,5 +1,5 @@
 server:
-  port: 8001
+  port: 9009
 
 spring:
   application:
@@ -7,7 +7,7 @@ spring:
 
   profiles:
     include: mysql
-    active: dev
+    active: sit
 
 logging:
   level:
@@ -16,6 +16,10 @@ logging:
     org.springframework.jdbc.core: debug
     org.springframework.security: trace
 
+
+
+
+#debug: true
 
 #management:
 #  server:
