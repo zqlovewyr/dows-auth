@@ -4,7 +4,7 @@ package org.dows.auth.biz.utils;
 import org.dows.auth.biz.context.SecurityContextHolder;
 import org.dows.auth.constant.SecurityConstants;
 import org.dows.auth.constant.TokenConstants;
-import org.dows.auth.vo.LoginUserVo;
+import org.dows.auth.entity.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -68,9 +68,9 @@ public class SecurityUtils
     /**
      * 获取登录用户信息
      */
-    public static LoginUserVo getLoginUser()
+    public static User getLoginUser()
     {
-        return SecurityContextHolder.get(SecurityConstants.LOGIN_USER, LoginUserVo.class);
+        return SecurityContextHolder.get(SecurityConstants.LOGIN_USER, User.class);
     }
 
     /**

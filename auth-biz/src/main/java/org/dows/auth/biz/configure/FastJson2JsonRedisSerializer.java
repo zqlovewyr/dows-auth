@@ -3,6 +3,8 @@ package org.dows.auth.biz.configure;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONReader;
 import com.alibaba.fastjson2.JSONWriter;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
@@ -49,5 +51,8 @@ public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T>
 
         return JSON.parseObject(str, clazz, JSONReader.Feature.SupportAutoType);
     }
-
+    protected JavaType getJavaType(Class<?> clazz)
+    {
+        return TypeFactory.defaultInstance().constructType(clazz);
+    }
 }

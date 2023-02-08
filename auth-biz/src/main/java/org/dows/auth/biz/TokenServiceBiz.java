@@ -1,11 +1,10 @@
 package org.dows.auth.biz;
 
 
-import cn.hutool.http.useragent.UserAgent;
 import org.dows.auth.biz.utils.*;
 import org.dows.auth.constant.CacheConstants;
 import org.dows.auth.constant.SecurityConstants;
-import org.dows.auth.vo.LoginUserVo;
+import org.dows.auth.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,13 +40,14 @@ public class TokenServiceBiz
     /**
      * 创建令牌
      */
-    public Map<String, Object> createToken(LoginUserVo loginUser)
+    public Map<String, Object> createToken(User loginUser)
     {
         String token = IdUtils.fastUUID();
         Long userId = loginUser.getId();
         String userName = loginUser.getAccountName();
         String tenantId = loginUser.getTenantId();
         loginUser.setToken(token);
+
 
         //添加地址信息
         refreshToken(loginUser);
@@ -74,7 +74,7 @@ public class TokenServiceBiz
      *
      * @return 用户信息
      */
-    public LoginUserVo getLoginUser()
+    public User getLoginUser()
     {
         return getLoginUser(ServletUtils.getRequest());
     }
@@ -84,7 +84,7 @@ public class TokenServiceBiz
      *
      * @return 用户信息
      */
-    public LoginUserVo getLoginUser(HttpServletRequest request)
+    public User getLoginUser(HttpServletRequest request)
     {
         // 获取请求携带的令牌
         String token = SecurityUtils.getToken(request);
@@ -96,9 +96,9 @@ public class TokenServiceBiz
      *
      * @return 用户信息
      */
-    public LoginUserVo getLoginUser(String token)
+    public User getLoginUser(String token)
     {
-        LoginUserVo user = null;
+        User user = null;
         try
         {
             if (StringUtils.isNotEmpty(token))
@@ -117,7 +117,7 @@ public class TokenServiceBiz
     /**
      * 设置用户身份信息
      */
-    public void setLoginUser(LoginUserVo loginUser)
+    public void setLoginUser(User loginUser)
     {
         if (StringUtils.isNotNull(loginUser) && StringUtils.isNotEmpty(loginUser.getToken()))
         {
@@ -142,7 +142,7 @@ public class TokenServiceBiz
      *
      * @param loginUser
      */
-    public void verifyToken(LoginUserVo loginUser)
+    public void verifyToken(User loginUser)
     {
         long expireTime = loginUser.getExpireTime();
         long currentTime = System.currentTimeMillis();
@@ -157,7 +157,7 @@ public class TokenServiceBiz
      *
      * @param loginUser 登录信息
      */
-    public void refreshToken(LoginUserVo loginUser)
+    public void refreshToken(User loginUser)
     {
         loginUser.setLoginTime(System.currentTimeMillis());
         loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);

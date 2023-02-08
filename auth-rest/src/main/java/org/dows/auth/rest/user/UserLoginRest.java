@@ -1,4 +1,4 @@
-package org.dows.auth.rest.admin;
+package org.dows.auth.rest.user;
 
 
 import io.swagger.annotations.Api;
@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.dows.auth.biz.TokenServiceBiz;
 import org.dows.auth.biz.UserDetailsServiceBiz;
 import org.dows.auth.form.LoginBodyForm;
-import org.dows.auth.vo.LoginUserVo;
 import org.dows.framework.api.Response;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,12 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
  * @author lait.zhang
  * @since 2022-12-23 22:05:09
  */
-@Api(tags = "后端登录")
+@Api(tags = "登录")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("admin/token")
-public class AdminTokenRest {
+@RequestMapping("user")
+public class UserLoginRest {
 
     private final TokenServiceBiz tokenServiceBiz;
 
@@ -37,9 +36,7 @@ public class AdminTokenRest {
     public Response login(@RequestBody LoginBodyForm form)
     {
         // 用户登录
-        LoginUserVo userInfo = userDetailsServiceBiz.login(form.getUserName(), form.getPassword());
-        // 获取登录token
-        return Response.ok(tokenServiceBiz.createToken(userInfo));
+        return userDetailsServiceBiz.login(form.getUserName(), form.getPassword());
     }
 }
 

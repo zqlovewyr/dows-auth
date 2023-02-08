@@ -2,6 +2,7 @@ package org.dows.auth.biz;
 
 import org.dows.auth.biz.exception.AuthException;
 import org.dows.auth.biz.utils.SecurityUtils;
+import org.dows.auth.entity.User;
 import org.dows.auth.vo.LoginUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
