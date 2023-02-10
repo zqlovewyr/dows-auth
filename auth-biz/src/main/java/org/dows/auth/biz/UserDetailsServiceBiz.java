@@ -1,17 +1,15 @@
 package org.dows.auth.biz;
 
 import cn.hutool.core.convert.Convert;
-import org.apache.commons.lang3.StringUtils;
-import org.dows.account.api.AccountUserApi;
 import org.dows.account.biz.AccountBiz;
 import org.dows.account.vo.AccountVo;
 import org.dows.auth.biz.exception.AuthException;
-import org.dows.auth.service.LoginService;
-import org.dows.auth.utils.JwtUtil;
 import org.dows.auth.biz.utils.SecurityUtils;
+import org.dows.auth.biz.utils.StringUtils;
 import org.dows.auth.constant.UserConstants;
 import org.dows.auth.entity.LoginUser;
-import org.dows.auth.entity.User;
+import org.dows.auth.utils.JwtUtil;
+import org.dows.auth.utils.RedisCache;
 import org.dows.auth.vo.LoginUserVo;
 import org.dows.framework.api.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +20,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import java.util.HashMap;
 import java.util.Objects;
 
 @Configuration
-public class UserDetailsServiceBiz implements UserDetailsService{
+public class UserDetailsServiceBiz{
 
 
     @Autowired(required = false)
@@ -39,7 +36,9 @@ public class UserDetailsServiceBiz implements UserDetailsService{
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private LoginService  loginService;
+    private LoginServiceBiz  loginService;
+    @Autowired
+    private RedisCache redisCache;
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails userDetails = org.springframework.security.core.userdetails.User.withDefaultPasswordEncoder()
@@ -51,47 +50,29 @@ public class UserDetailsServiceBiz implements UserDetailsService{
         return new InMemoryUserDetailsManager(userDetails);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //根据用户名查询用户信息
-        AccountVo accountVo = accountBiz.queryAccountVoByAccountName(username,2);
-        User userInfo = User.builder()
-                .accountId(accountVo.getAccountId())
-                .tenantId(accountVo.getTenantId())
-                .appId(accountVo.getAppId())
-                .accountName(accountVo.getAccountName())
-                .password(accountVo.getPassword())
-                .avatar(accountVo.getAvatar())
-                .phone(accountVo.getPhone())
-                .accountClientNo(accountVo.getAccountClientNo())
-                .sex(accountVo.getSex())
-                .source(accountVo.getSource())
-                .job(accountVo.getJob())
-                .birthday(accountVo.getBirthday())
-                .education(accountVo.getEducation())
-                .shengXiao(accountVo.getShengXiao())
-                .constellation(accountVo.getConstellation())
-                .createTime(accountVo.getCreateTime())
-                .build();
-        //如果查询不到数据就通过抛出异常来给出提示
-        if(Objects.isNull(userInfo)){
-            throw new RuntimeException("用户名或密码错误");
-        }
-        //TODO 根据用户查询权限信息 添加到LoginUser中
-
-        //封装成UserDetails对象返回
-        return new LoginUser(userInfo);
-    }
 
     /**
      * 登录
      */
-    public Response login(String username, String password)
-    {
-        return loginService.login(username,password);
+    public Response login(String username, String password) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,password);
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        if(Objects.isNull(authenticate)){
+            throw new RuntimeException("用户名或密码错误");
+        }
+        //使用userid生成token
+        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
+        String userId = loginUser.getUser().getId().toString();
+        String jwt = JwtUtil.createJWT(userId);
+        //authenticate存入redis
+        redisCache.setCacheObject("login:"+userId,loginUser);
+        //把token响应给前端
+        HashMap<String,String> map = new HashMap<>();
+        map.put("token",jwt);
+        return Response.ok(map,"登陆成功");
     }
 
-//
+
 //    /**
 //     * 登录
 //     */

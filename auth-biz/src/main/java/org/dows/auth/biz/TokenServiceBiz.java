@@ -5,6 +5,7 @@ import org.dows.auth.biz.utils.*;
 import org.dows.auth.constant.CacheConstants;
 import org.dows.auth.constant.SecurityConstants;
 import org.dows.auth.entity.User;
+import org.dows.auth.vo.LoginUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +41,7 @@ public class TokenServiceBiz
     /**
      * 创建令牌
      */
-    public Map<String, Object> createToken(User loginUser)
+    public Map<String, Object> createToken(LoginUserVo loginUser)
     {
         String token = IdUtils.fastUUID();
         Long userId = loginUser.getId();
@@ -117,7 +118,7 @@ public class TokenServiceBiz
     /**
      * 设置用户身份信息
      */
-    public void setLoginUser(User loginUser)
+    public void setLoginUser(LoginUserVo loginUser)
     {
         if (StringUtils.isNotNull(loginUser) && StringUtils.isNotEmpty(loginUser.getToken()))
         {
@@ -142,7 +143,7 @@ public class TokenServiceBiz
      *
      * @param loginUser
      */
-    public void verifyToken(User loginUser)
+    public void verifyToken(LoginUserVo loginUser)
     {
         long expireTime = loginUser.getExpireTime();
         long currentTime = System.currentTimeMillis();
@@ -157,7 +158,7 @@ public class TokenServiceBiz
      *
      * @param loginUser 登录信息
      */
-    public void refreshToken(User loginUser)
+    public void refreshToken(LoginUserVo loginUser)
     {
         loginUser.setLoginTime(System.currentTimeMillis());
         loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
