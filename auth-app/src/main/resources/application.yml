@@ -1,0 +1,33 @@
+server:
+  port: 9009
+
+spring:
+  application:
+    name: authorization-server
+
+  profiles:
+    include: mysql
+    active: sit
+
+logging:
+  level:
+    org.springframework.web: trace
+    org.springframework.security.oauth2: debug
+    org.springframework.jdbc.core: debug
+    org.springframework.security: trace
+
+
+
+
+#debug: true
+
+#management:
+#  server:
+#    port: 8081
+#    # 根路径
+#  endpoints:
+#    web:
+#      base-path: /actuator/z
+#      # web端允许的路径
+#      exposure:
+#        include: *
