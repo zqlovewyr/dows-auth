@@ -1,15 +1,14 @@
 package org.dows.auth.biz;
 
-import org.dows.account.biz.AccountBiz;
+import org.dows.account.api.AccountUserApi;
 import org.dows.account.vo.AccountVo;
-import org.dows.auth.entity.LoginUser;
 import org.dows.auth.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
@@ -17,8 +16,9 @@ import java.util.Objects;
 public class UserDetailsServiceImpl implements UserDetailsService{
 
 
+    @Lazy
     @Autowired
-    private AccountBiz accountBiz;
+    private AccountUserApi accountBiz;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

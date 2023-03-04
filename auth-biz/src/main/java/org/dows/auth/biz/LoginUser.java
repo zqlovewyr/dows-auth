@@ -1,8 +1,10 @@
-package org.dows.auth.entity;
+package org.dows.auth.biz;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dows.auth.entity.User;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

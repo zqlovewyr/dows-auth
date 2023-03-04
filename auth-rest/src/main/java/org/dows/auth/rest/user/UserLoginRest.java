@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dows.auth.biz.TokenServiceBiz;
 import org.dows.auth.biz.UserDetailsServiceBiz;
 import org.dows.auth.form.LoginBodyForm;
+import org.dows.auth.vo.LoginUserVo;
 import org.dows.framework.api.Response;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +37,8 @@ public class UserLoginRest {
     public Response login(@RequestBody LoginBodyForm form)
     {
         // 用户登录
-        return userDetailsServiceBiz.login(form.getUserName(), form.getPassword());
+        LoginUserVo vo = userDetailsServiceBiz.login(form.getUserName(), form.getPassword());
+        return Response.ok(vo);
     }
 }
 

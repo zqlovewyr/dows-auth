@@ -1,7 +1,7 @@
-package org.dows.auth.service.impl;
+package org.dows.auth.biz.service.impl;
 
-import org.dows.auth.entity.LoginUser;
-import org.dows.auth.service.LoginService;
+import org.dows.auth.biz.LoginUser;
+import org.dows.auth.biz.service.LoginService;
 import org.dows.auth.utils.JwtUtil;
 import org.dows.auth.utils.RedisCache;
 import org.dows.framework.api.Response;

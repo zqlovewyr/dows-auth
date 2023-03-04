@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>org.dows.cloud</groupId>
-            <artifactId>account-biz</artifactId>
+            <artifactId>account-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>

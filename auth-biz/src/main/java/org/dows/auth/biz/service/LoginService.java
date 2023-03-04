@@ -1,4 +1,4 @@
-package org.dows.auth.service;
+package org.dows.auth.biz.service;
 
 import org.dows.framework.api.Response;
 

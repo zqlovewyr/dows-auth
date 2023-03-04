@@ -2,7 +2,7 @@ package org.dows.auth.biz.filter;
 
 import io.jsonwebtoken.Claims;
 import org.dows.auth.biz.utils.StringUtils;
-import org.dows.auth.entity.LoginUser;
+import org.dows.auth.biz.LoginUser;
 import org.dows.auth.utils.JwtUtil;
 import org.dows.auth.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
