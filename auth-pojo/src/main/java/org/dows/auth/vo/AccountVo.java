@@ -1,38 +1,21 @@
 package org.dows.auth.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Set;
 
-/**
- * 用户信息
- *
- * @author vctgo
- */
 @Data
-public class LoginUserVo implements Serializable
-{
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * 用户唯一标识
-     */
-    private String token;
-    /**
-     * 用户名id
-     */
+@ApiModel(value = "客户信息", description = "客户信息")
+public class AccountVo {
+    @ApiModelProperty(value = "主键")
+    //主键ID
+    //@JsonSerialize(using= ToStringSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
-
-    @ApiModelProperty(value = "租户ID")
-    private String tenantId;
-
-    @ApiModelProperty(value = "应用ID")
-    private String appId;
 
     @ApiModelProperty(value = "账号名")
     private String accountName;
@@ -43,6 +26,11 @@ public class LoginUserVo implements Serializable
 
     @ApiModelProperty(value = "手机号")
     private String phone;
+    @ApiModelProperty(value = "租户ID")
+    private String tenantId;
+
+    @ApiModelProperty(value = "appId")
+    private String appId;
 
     @ApiModelProperty(value = "客户账号id")
     private String accountId;
@@ -60,7 +48,7 @@ public class LoginUserVo implements Serializable
     private String activation;
 
     @ApiModelProperty(value = "最近下单时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date lastOrderTime;
 
     @ApiModelProperty(value = "总订单量")
@@ -82,7 +70,7 @@ public class LoginUserVo implements Serializable
     private String job;
 
     @ApiModelProperty(value = "生日")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthday;
 
     @ApiModelProperty(value = "学历")
@@ -101,28 +89,10 @@ public class LoginUserVo implements Serializable
     @ApiModelProperty(value = "年龄")
     private Integer age;
 
-    /**
-     * 登录时间
-     */
-    private Long loginTime;
+    @ApiModelProperty(value = "openid")
+    private String openid;
 
-    /**
-     * 过期时间
-     */
-    private Long expireTime;
-
-
-
-    /**
-     * 权限列表
-     */
-    private Set<String> permissions;
-
-    /**
-     * 角色列表
-     */
-    private Set<String> roles;
-
-
+    @ApiModelProperty(value = "账号区分：1、总控端2、总部端、3、门店端APP4、小程序流量用户")
+    private Integer accountType;
 
 }

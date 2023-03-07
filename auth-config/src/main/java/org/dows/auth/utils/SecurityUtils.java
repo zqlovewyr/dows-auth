@@ -1,11 +1,11 @@
-package org.dows.auth.biz.utils;
+package org.dows.auth.utils;
 
 
-import org.dows.auth.biz.context.SecurityContextHolder;
 import org.dows.auth.constant.SecurityConstants;
 import org.dows.auth.constant.TokenConstants;
-import org.dows.auth.entity.User;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.dows.auth.context.SecurityContextHolder;
+import org.dows.auth.vo.LoginUserVo;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -84,9 +84,9 @@ public class SecurityUtils
     /**
      * 获取登录用户信息
      */
-    public static User getLoginUser()
+    public static LoginUserVo getLoginUser()
     {
-        return SecurityContextHolder.get(SecurityConstants.LOGIN_USER, User.class);
+        return SecurityContextHolder.get(SecurityConstants.LOGIN_USER, LoginUserVo.class);
     }
 
     /**
@@ -137,11 +137,11 @@ public class SecurityUtils
      * @param password 密码
      * @return 加密字符串
      */
-    public static String encryptPassword(String password)
-    {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.encode(password);
-    }
+//    public static String encryptPassword(String password)
+//    {
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        return passwordEncoder.encode(password);
+//    }
 
     /**
      * 随机生成n位字符串
@@ -182,9 +182,9 @@ public class SecurityUtils
      * @param encodedPassword 加密后字符
      * @return 结果
      */
-    public static boolean matchesPassword(String rawPassword, String encodedPassword)
-    {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.matches(rawPassword, encodedPassword);
-    }
+//    public static boolean matchesPassword(String rawPassword, String encodedPassword)
+//    {
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        return passwordEncoder.matches(rawPassword, encodedPassword);
+//    }
 }

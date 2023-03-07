@@ -1,9 +1,9 @@
-package org.dows.auth.biz.context;
+package org.dows.auth.context;
 
 import cn.hutool.core.convert.Convert;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import org.dows.auth.biz.utils.StringUtils;
 import org.dows.auth.constant.SecurityConstants;
+import org.dows.auth.utils.StringUtils;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

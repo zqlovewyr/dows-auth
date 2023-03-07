@@ -1,46 +1,30 @@
 package org.dows.auth.biz;
 
-import cn.hutool.core.convert.Convert;
-import org.dows.account.api.AccountUserApi;
-import org.dows.account.vo.AccountVo;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import org.dows.auth.biz.exception.AuthException;
 import org.dows.auth.biz.utils.SecurityUtils;
 import org.dows.auth.biz.utils.StringUtils;
+import org.dows.auth.bo.LoginBodyBo;
 import org.dows.auth.constant.UserConstants;
-import org.dows.auth.utils.JwtUtil;
-import org.dows.auth.utils.RedisCache;
+import org.dows.auth.service.LoginService;
+import org.dows.auth.vo.AccountVo;
 import org.dows.auth.vo.LoginUserVo;
-import org.dows.framework.api.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.List;
+import java.util.Random;
 
-@Service
+@Configuration
 public class UserDetailsServiceBiz{
 
+    @Autowired
+    private LoginService loginService;
 
-    @Lazy
-    @Autowired
-    private AccountUserApi accountBiz;
-    @Autowired
-    private PasswordServiceBiz passwordServiceBiz;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private LoginServiceBiz  loginService;
-    @Autowired
-    private RedisCache redisCache;
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails userDetails = org.springframework.security.core.userdetails.User.withDefaultPasswordEncoder()
@@ -77,8 +61,12 @@ public class UserDetailsServiceBiz{
 
     /**
      * 登录
+     * @param username
+     * @param password
+     * @param accountType  账号区分：1、总控端2、总部端、3、门店端APP4、小程序流量用户
+     * @return
      */
-    public LoginUserVo login(String username, String password)
+    public LoginUserVo login(String username, String password,Integer accountType)
     {
         // 用户名或密码为空 错误
         if (StringUtils.isAnyBlank(username, password))
@@ -99,27 +87,40 @@ public class UserDetailsServiceBiz{
         }
 
         // 查询用户信息
-        AccountVo accountVo = accountBiz.queryAccountVoByAccountName(username,2);
-        LoginUserVo userInfo = LoginUserVo.builder()
-                .accountId(accountVo.getAccountId())
-                .tenantId(accountVo.getTenantId())
-                .appId(accountVo.getAppId())
-                .accountName(accountVo.getAccountName())
-                .password(accountVo.getPassword())
-                .avatar(accountVo.getAvatar())
-                .phone(accountVo.getPhone())
-                .accountClientNo(accountVo.getAccountClientNo())
-                .sex(accountVo.getSex())
-                .source(accountVo.getSource())
-                .job(accountVo.getJob())
-                .birthday(accountVo.getBirthday())
-                .education(accountVo.getEducation())
-                .shengXiao(accountVo.getShengXiao())
-                .constellation(accountVo.getConstellation())
-                .createTime(accountVo.getCreateTime())
-                .build();
+        LoginBodyBo bodyBo = new LoginBodyBo();
+        bodyBo.setAccountType(accountType);
+        bodyBo.setUserName(username);
+        List<AccountVo> accountVos = loginService.selectAccountPage(bodyBo);
+        if(accountVos.size() == 0){
+            throw new AuthException("没有查询到此用户！请联系管理员");
+        }
+        AccountVo accountVo = accountVos.get(0);
+        // String pass = new BCryptPasswordEncoder().encode(password);
+        if(!SecurityUtils.matchesPassword(password, accountVo.getPassword())){
+            throw new AuthException("密码错误！请重新输入");
+        }
+
+        LoginUserVo userInfo = new LoginUserVo();
+        userInfo.setAccountId(accountVo.getAccountId());
+        userInfo.setTenantId(accountVo.getTenantId());
+        userInfo.setAppId(accountVo.getAppId());
+        userInfo.setAccountName(accountVo.getAccountName());
+        userInfo.setPassword(accountVo.getPassword());
+        userInfo.setAvatar(accountVo.getAvatar());
+        userInfo.setPhone(accountVo.getPhone());
+        userInfo.setAccountClientNo(accountVo.getAccountClientNo());
+        userInfo.setSex(accountVo.getSex());
+        userInfo.setSource(accountVo.getSource());
+        userInfo.setJob(accountVo.getJob());
+        userInfo.setBirthday(accountVo.getBirthday());
+        userInfo.setEducation(accountVo.getEducation());
+        userInfo.setShengXiao(accountVo.getShengXiao());
+        userInfo.setConstellation(accountVo.getConstellation());
+        userInfo.setCreateTime(accountVo.getCreateTime());
         //线程塞入租户ID
-        SecurityUtils.setTenantId(Convert.toStr(userInfo.getTenantId()));
+        SecurityUtils.setTenantId(userInfo.getTenantId());
+        // 用户AccountId
+        SecurityUtils.setAccountId(userInfo.getAccountId());
         //先查询是否被停用了租户
 //        if (userInfo.getTenantStatus() != null && UserStatus.DISABLE.getCode().equals(userInfo.getTenantStatus().toString()))
 //        {
@@ -132,8 +133,78 @@ public class UserDetailsServiceBiz{
 //            throw new ServiceException("当前租户已超过租赁日期");
 //        }
 
-        passwordServiceBiz.validate(userInfo, password);
+       //  passwordServiceBiz.validate(userInfo, password);
         return userInfo;
     }
 
+    /**
+     * 小程序端登录使用
+     * @param openid
+     * @return
+     */
+    public LoginUserVo login(String openid)
+    {
+        // 查询用户信息
+        LoginBodyBo bodyBo = new LoginBodyBo();
+        bodyBo.setAccountType(4);
+        bodyBo.setOpenid(openid);
+        AccountVo accountVo = null;
+        List<AccountVo> accountVos = loginService.selectAccountPage(bodyBo);
+
+        if (accountVos.size() == 0)
+        {
+            String wxUserNo = genRandomNum();
+            AccountVo wxUser = new AccountVo();
+            wxUser.setOpenid(openid);
+            wxUser.setAccountName(wxUserNo);
+            wxUser.setAccountId(IdWorker.getIdStr());
+            wxUser.setSource("wx");
+            wxUser.setOpenid(openid);
+            wxUser.setAccountType(4); // 流量用户
+            loginService.saveWxAccount(wxUser);
+            accountVo = wxUser;
+        }
+        else {
+            accountVo = accountVos.get(0);
+        }
+        LoginUserVo userInfo = new LoginUserVo();
+        userInfo.setAccountId(accountVo.getAccountId());
+        userInfo.setTenantId(accountVo.getTenantId());
+        userInfo.setAppId(accountVo.getAppId());
+        userInfo.setAccountName(accountVo.getAccountName());
+        userInfo.setPassword(accountVo.getPassword());
+        userInfo.setAvatar(accountVo.getAvatar());
+        userInfo.setPhone(accountVo.getPhone());
+        userInfo.setAccountClientNo(accountVo.getAccountClientNo());
+        userInfo.setSex(accountVo.getSex());
+        userInfo.setSource(accountVo.getSource());
+        userInfo.setJob(accountVo.getJob());
+        userInfo.setBirthday(accountVo.getBirthday());
+        userInfo.setEducation(accountVo.getEducation());
+        userInfo.setShengXiao(accountVo.getShengXiao());
+        userInfo.setConstellation(accountVo.getConstellation());
+        userInfo.setCreateTime(accountVo.getCreateTime());
+        //线程塞入租户ID
+        SecurityUtils.setTenantId(userInfo.getTenantId());
+        // 用户AccountId
+        SecurityUtils.setAccountId(userInfo.getAccountId());
+        //先查询是否被停用了租户
+//        if (userInfo.getTenantStatus() != null && UserStatus.DISABLE.getCode().equals(userInfo.getTenantStatus().toString()))
+//        {
+//            recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, "当前租户已经被停用，请联系管理员");
+//            throw new ServiceException("当前租户已经被停用");
+//        }
+//        if (userInfo.getTenantEndDate() != null && userInfo.getTenantEndDate().compareTo(new Date()) < 0)
+//        {
+//            recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, "当前租户已超过租赁日期，请联系管理员");
+//            throw new ServiceException("当前租户已超过租赁日期");
+//        }
+
+        //  passwordServiceBiz.validate(userInfo, password);
+        return userInfo;
+    }
+    // 获取8为随机编码
+    public String genRandomNum()
+    { int  maxNum = 36; int i; int count = 0; char[] str = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }; StringBuffer pwd = new StringBuffer(""); Random r = new Random(); while(count < 8){ i = Math.abs(r.nextInt(maxNum)); if (i >= 0 && i < str.length) { pwd.append(str[i]); count ++; } } return pwd.toString();
+    }
 }

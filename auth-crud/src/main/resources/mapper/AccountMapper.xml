@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dows.auth.mapper.LoginMapper">
+
+    <select id="selectAccountPage" parameterType="org.dows.auth.bo.LoginBodyBo" resultType="org.dows.auth.vo.AccountVo">
+        SELECT
+            t1.id,
+            t1.account_name,
+            t1.avatar,
+            t1.password,
+            t1.phone,
+            t1.account_id,
+            t1.app_id,
+            t3.create_time,
+            t3.birthday,
+            t3.province,
+            t3.city,
+            t3.tenant_id,
+            t3.sex,
+            t3.job,
+            t3.education,
+            t3.nation,
+            t3.client_no AS accountClientNo
+        FROM
+            account_instance t1,
+            account_tenant t2,
+            account_user_info t3
+        WHERE
+            t1.account_id = t2.account_id
+          AND t3.account_id = t1.account_id
+
+        <if test="loginBodyBo.userName != null and loginBodyBo.userName != ''">
+            AND t1.account_name = #{loginBodyBo.userName}
+        </if>
+        <if test="loginBodyBo.accountType != null">
+            AND t1.account_type = #{loginBodyBo.accountType}
+        </if>
+        <if test="loginBodyBo.openid != null and loginBodyBo.openid != ''">
+            AND t1.openid = #{loginBodyBo.openid}
+        </if>
+    </select>
+
+    <insert id="saveWxAccount" parameterType="org.dows.auth.vo.AccountVo" useGeneratedKeys="true" keyProperty="id">
+        insert into account_instance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountId != null and accountId != ''">account_id,</if>
+            <if test="accountName != null and accountName != ''">account_name,</if>
+            <if test="avatar != null and avatar != ''">avatar,</if>
+            <if test="source != null and source != ''">source,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="appId != null and appId != ''">app_id,</if>
+            dt,
+            <if test="accountType != null">account_type,</if>
+            <if test="openid != null and openid != ''">openid,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountId != null and accountId != ''">#{accountVo.accountId},</if>
+            <if test="accountName != null and accountName != ''">#{accountVo.accountName},</if>
+            <if test="avatar != null and avatar != ''">#{accountVo.avatar},</if>
+            <if test="source != null and source != ''">#{accountVo.source},</if>
+            <if test="phone != null and phone != ''">#{accountVo.phone},</if>
+            <if test="appId != null and appId != ''">#{accountVo.appId},</if>
+            sysdate(),
+            <if test="accountType != null">#{accountVo.accountType},</if>
+            <if test="openid != null and openid != ''">#{accountVo.openid},</if>
+        </trim>
+    </insert>
+
+</mapper>

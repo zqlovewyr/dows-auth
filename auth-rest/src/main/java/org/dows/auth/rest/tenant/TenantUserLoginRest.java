@@ -1,4 +1,4 @@
-package org.dows.auth.rest.admin;
+package org.dows.auth.rest.tenant;
 
 
 import io.swagger.annotations.Api;
@@ -26,12 +26,12 @@ import javax.servlet.http.HttpServletRequest;
  * @author lait.zhang
  * @since 2022-12-23 22:05:09
  */
-@Api(tags = "总部端登录")
+@Api(tags = "APP门店端登录")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("admin/account")
-public class AdminLoginRest {
+@RequestMapping("tenant/account")
+public class TenantUserLoginRest {
 
     private final TokenService1Biz tokenService1Biz;
 
@@ -43,21 +43,17 @@ public class AdminLoginRest {
     {
         try{
             // 用户登录
-            LoginUserVo vo =userDetailsServiceBiz.login(form.getUserName(),form.getPassword(),2);
+            LoginUserVo vo =userDetailsServiceBiz.login(form.getUserName(),form.getPassword(),3);
             return Response.ok(tokenService1Biz.createToken(vo));
         }catch (Exception e){
             return Response.fail(e.getMessage());
         }
     }
-
     @PostMapping("/logout")
     @ApiOperation(value = "登出")
     public Response logout(HttpServletRequest request)
     {
         try{
-
-            String account = SecurityUtils.getAccountId();
-
             String token = SecurityUtils.getToken(request);
             if (StringUtils.isNotEmpty(token))
             {

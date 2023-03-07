@@ -13,6 +13,11 @@ public class SecurityConstants
     public static final String DETAILS_TENANT_ID = "tenant-id";
 
     /**
+     * 用户account_id
+     */
+    public static final String ACCOUNT_ID = "account_id";
+
+    /**
      * 部门ID字段
      */
     public static final String DETAILS_DEPT_ID = "dept_id";

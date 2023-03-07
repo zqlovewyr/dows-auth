@@ -16,7 +16,7 @@ spring:
     # 端口，默认为6379
     port: 6379
     # 数据库索引
-    database: 0
+    database: 8
     # 密码
     password: ZBCY@app9876
     # 连接超时时间
@@ -38,6 +38,16 @@ logging:
     org.springframework.security.oauth2: debug
     org.springframework.jdbc.core: debug
     org.springframework.security: trace
+
+# 微信配置
+wx:
+  miniapp:
+    configs:
+      - appid: wxf25ba88aa880e9cf #微信小程序的appid
+        secret: e9ad6cbaa8961e0caaeda4602156c979 #微信小程序的Secret
+        token: #微信小程序消息服务器配置的token
+        aesKey: #微信小程序消息服务器配置的EncodingAESKey
+        msgDataFormat: JSON
 
 
 

@@ -1,10 +1,11 @@
 package org.dows.auth.biz;
 
 
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.dows.auth.biz.utils.*;
 import org.dows.auth.constant.CacheConstants;
 import org.dows.auth.constant.SecurityConstants;
-import org.dows.auth.entity.User;
 import org.dows.auth.vo.LoginUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,8 +20,9 @@ import java.util.concurrent.TimeUnit;
  *
  * @author vctgo
  */
+@Slf4j
 @Component
-public class TokenServiceBiz
+public class TokenService1Biz
 {
 //    @Autowired
 //    private RedisService redisService;
@@ -36,7 +38,7 @@ public class TokenServiceBiz
     private final static Long MILLIS_MINUTE_TEN = CacheConstants.REFRESH_TIME * MILLIS_MINUTE;
 
     @Autowired
-    private RedisServiceBiz redisService;
+    private RedisService1Biz redisService;
 
     /**
      * 创建令牌
@@ -48,7 +50,6 @@ public class TokenServiceBiz
         String userName = loginUser.getAccountName();
         String tenantId = loginUser.getTenantId();
         loginUser.setToken(token);
-
 
         //添加地址信息
         refreshToken(loginUser);
@@ -75,7 +76,7 @@ public class TokenServiceBiz
      *
      * @return 用户信息
      */
-    public User getLoginUser()
+    public LoginUserVo getLoginUser()
     {
         return getLoginUser(ServletUtils.getRequest());
     }
@@ -85,7 +86,7 @@ public class TokenServiceBiz
      *
      * @return 用户信息
      */
-    public User getLoginUser(HttpServletRequest request)
+    public LoginUserVo getLoginUser(HttpServletRequest request)
     {
         // 获取请求携带的令牌
         String token = SecurityUtils.getToken(request);
@@ -97,20 +98,22 @@ public class TokenServiceBiz
      *
      * @return 用户信息
      */
-    public User getLoginUser(String token)
+    public LoginUserVo getLoginUser(String token)
     {
-        User user = null;
+        LoginUserVo user = null;
         try
         {
             if (StringUtils.isNotEmpty(token))
             {
                 String userkey = JwtUtils.getUserKey(token);
-                user = redisService.getCacheObject(getTokenKey(userkey));
+                JSONObject object = redisService.getCacheObject(getTokenKey(userkey));
+                user = JSONObject.parseObject(JSONObject.toJSONString(object),LoginUserVo.class);
                 return user;
             }
         }
         catch (Exception e)
         {
+            log.error("登录获取用户信息失败：",e);
         }
         return user;
     }
