@@ -21,6 +21,7 @@
         <module>auth-config</module>
         <module>auth-rest</module>
         <module>auth-pojo</module>
+        <module>auth-boot</module>
     </modules>
 </project>
 
