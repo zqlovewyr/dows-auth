@@ -2,8 +2,8 @@ package org.dows.auth.biz.context;
 
 import cn.hutool.core.convert.Convert;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import org.dows.auth.biz.utils.StringUtils;
-import org.dows.auth.constant.SecurityConstants;
+import org.dows.auth.api.constant.SecurityConstants;
+import org.dows.auth.api.utils.StringUtils;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,113 +14,92 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author vctgo
  */
-public class SecurityContextHolder
-{
+public class SecurityContextHolder {
     private static final TransmittableThreadLocal<Map<String, Object>> THREAD_LOCAL = new TransmittableThreadLocal<>();
 
-    public static void set(String key, Object value)
-    {
+    public static void set(String key, Object value) {
         Map<String, Object> map = getLocalMap();
         map.put(key, value == null ? StringUtils.EMPTY : value);
     }
 
-    public static String get(String key)
-    {
+    public static String get(String key) {
         Map<String, Object> map = getLocalMap();
         return Convert.toStr(map.getOrDefault(key, StringUtils.EMPTY));
     }
 
 
-    public static <T> T get(String key, Class<T> clazz)
-    {
+    public static <T> T get(String key, Class<T> clazz) {
         Map<String, Object> map = getLocalMap();
         return StringUtils.cast(map.getOrDefault(key, null));
     }
 
-    public static Map<String, Object> getLocalMap()
-    {
+    public static Map<String, Object> getLocalMap() {
         Map<String, Object> map = THREAD_LOCAL.get();
-        if (map == null)
-        {
+        if (map == null) {
             map = new ConcurrentHashMap<String, Object>();
             THREAD_LOCAL.set(map);
         }
         return map;
     }
 
-    public static void setLocalMap(Map<String, Object> threadLocalMap)
-    {
+    public static void setLocalMap(Map<String, Object> threadLocalMap) {
         THREAD_LOCAL.set(threadLocalMap);
     }
 
 
-    public static String getTenantId()
-    {
-        return get(org.dows.auth.constant.SecurityConstants.DETAILS_TENANT_ID);
+    public static String getTenantId() {
+        return get(SecurityConstants.DETAILS_TENANT_ID);
     }
 
-    public static void setTenantId(String tenantId)
-    {
-        set(org.dows.auth.constant.SecurityConstants.DETAILS_TENANT_ID, tenantId);
+    public static void setTenantId(String tenantId) {
+        set(SecurityConstants.DETAILS_TENANT_ID, tenantId);
     }
 
-    public static String getAccountId()
-    {
+    public static String getAccountId() {
         return get(SecurityConstants.ACCOUNT_ID);
     }
 
-    public static void setAccountId(String accountId)
-    {
+    public static void setAccountId(String accountId) {
         set(SecurityConstants.ACCOUNT_ID, accountId);
     }
 
-    public static Long getDeptId()
-    {
+    public static Long getDeptId() {
         return Convert.toLong(get(SecurityConstants.DETAILS_DEPT_ID));
     }
 
-    public static void setDeptId(String deptId)
-    {
+    public static void setDeptId(String deptId) {
         set(SecurityConstants.DETAILS_DEPT_ID, deptId);
     }
 
-    public static void setRemoteHeader(Object account)
-    {
+    public static void setRemoteHeader(Object account) {
         set(SecurityConstants.REMOTE_HEADER, account);
     }
 
-    public static Long getUserId()
-    {
+    public static Long getUserId() {
         return Convert.toLong(get(SecurityConstants.DETAILS_USER_ID), 0L);
     }
 
-    public static void setUserId(String account)
-    {
+    public static void setUserId(String account) {
         set(SecurityConstants.DETAILS_USER_ID, account);
     }
 
-    public static String getUserName()
-    {
+    public static String getUserName() {
         return get(SecurityConstants.DETAILS_USERNAME);
     }
 
-    public static void setUserName(String username)
-    {
+    public static void setUserName(String username) {
         set(SecurityConstants.DETAILS_USERNAME, username);
     }
 
-    public static String getUserKey()
-    {
+    public static String getUserKey() {
         return get(SecurityConstants.USER_KEY);
     }
 
-    public static void setUserKey(String userKey)
-    {
+    public static void setUserKey(String userKey) {
         set(SecurityConstants.USER_KEY, userKey);
     }
 
-    public static void remove()
-    {
+    public static void remove() {
         THREAD_LOCAL.remove();
     }
 }

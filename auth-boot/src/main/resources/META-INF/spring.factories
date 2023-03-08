@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  AccountBoot
+org.dows.auth.boot.AuthBoot

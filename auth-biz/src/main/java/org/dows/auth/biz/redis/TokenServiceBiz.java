@@ -1,13 +1,12 @@
-package org.dows.auth.biz;
+package org.dows.auth.biz.redis;
+
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.auth.api.constant.CacheConstants;
 import org.dows.auth.api.constant.SecurityConstants;
-import org.dows.auth.api.utils.IdUtils;
-import org.dows.auth.api.utils.JwtUtils;
-import org.dows.auth.api.utils.ServletUtils;
-import org.dows.auth.api.utils.StringUtils;
+import org.dows.auth.api.utils.*;
+import org.dows.auth.biz.context.JwtUtils;
 import org.dows.auth.biz.context.SecurityUtils;
 import org.dows.auth.vo.LoginUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class TokenService1Biz
+public class TokenServiceBiz
 {
 //    @Autowired
 //    private RedisService redisService;
@@ -41,7 +40,7 @@ public class TokenService1Biz
     private final static Long MILLIS_MINUTE_TEN = CacheConstants.REFRESH_TIME * MILLIS_MINUTE;
 
     @Autowired
-    private RedisService1Biz redisService;
+    private RedisServiceBiz redisService;
 
     /**
      * 创建令牌

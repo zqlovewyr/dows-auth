@@ -1,11 +1,11 @@
 package org.dows.auth.biz;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import org.dows.auth.biz.exception.AuthException;
-import org.dows.auth.biz.utils.SecurityUtils;
-import org.dows.auth.biz.utils.StringUtils;
+import org.dows.auth.api.exception.AuthException;
+import org.dows.auth.api.utils.StringUtils;
+import org.dows.auth.biz.context.SecurityUtils;
 import org.dows.auth.bo.LoginBodyBo;
-import org.dows.auth.constant.UserConstants;
+import org.dows.auth.api.constant.UserConstants;
 import org.dows.auth.service.LoginService;
 import org.dows.auth.vo.AccountVo;
 import org.dows.auth.vo.LoginUserVo;

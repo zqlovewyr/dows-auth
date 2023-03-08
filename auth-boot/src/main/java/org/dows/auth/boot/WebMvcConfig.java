@@ -1,4 +1,4 @@
-package org.dows.auth.config;
+package org.dows.auth.boot;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -68,22 +68,22 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //    }
 //
 //
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        // 注册拦截器
-//        registry.addInterceptor(getHeaderInterceptor())
-//                .addPathPatterns("/**")
-//                .excludePathPatterns(excludeUrls)
-//                .excludePathPatterns("/acc/doLogin");
-//    }
-//
-//    /**
-//     * 自定义请求头拦截器
-//     */
-//    public HeaderInterceptor getHeaderInterceptor()
-//    {
-//        return new HeaderInterceptor();
-//    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 注册拦截器
+        registry.addInterceptor(getHeaderInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns(excludeUrls)
+                .excludePathPatterns("/acc/doLogin");
+    }
+
+    /**
+     * 自定义请求头拦截器
+     */
+    public HeaderInterceptor getHeaderInterceptor()
+    {
+        return new HeaderInterceptor();
+    }
 
     /**
      * 跨域处理
