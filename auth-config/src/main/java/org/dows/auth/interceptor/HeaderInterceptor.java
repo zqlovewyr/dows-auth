@@ -46,20 +46,17 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor
             outputMsg(Response.fail("token非法"),response);
             return false;
         }
-
-        SecurityContextHolder.setTenantId(ServletUtils.getHeader(request, SecurityConstants.DETAILS_TENANT_ID));
-        SecurityContextHolder.setDeptId(ServletUtils.getHeader(request, SecurityConstants.DETAILS_DEPT_ID));
-        SecurityContextHolder.setUserId(ServletUtils.getHeader(request, SecurityConstants.DETAILS_USER_ID));
-        SecurityContextHolder.setUserName(ServletUtils.getHeader(request, SecurityConstants.DETAILS_USERNAME));
-        SecurityContextHolder.setUserKey(ServletUtils.getHeader(request, SecurityConstants.USER_KEY));
-        SecurityContextHolder.setAccountId(ServletUtils.getHeader(request, SecurityConstants.ACCOUNT_ID));
-
         // String token = SecurityUtils.getToken();
         if (StringUtils.isNotEmpty(token))
         {
             LoginUserVo loginUser = AuthUtil.getLoginUser(token);
             if (StringUtils.isNotNull(loginUser))
             {
+                SecurityContextHolder.setTenantId(loginUser.getTenantId());
+                // SecurityContextHolder.setDeptId(ServletUtils.getHeader(request, SecurityConstants.DETAILS_DEPT_ID));
+                SecurityContextHolder.setUserName(loginUser.getAccountName());
+                SecurityContextHolder.setUserKey(ServletUtils.getHeader(request, SecurityConstants.USER_KEY));
+                SecurityContextHolder.setAccountId(loginUser.getAccountId());
                 AuthUtil.verifyLoginUserExpire(loginUser);
                 SecurityContextHolder.set(SecurityConstants.LOGIN_USER, loginUser);
             }else {
