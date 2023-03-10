@@ -2,7 +2,6 @@ package org.dows.auth.boot;
 
 import com.alibaba.fastjson.JSONObject;
 import io.jsonwebtoken.Claims;
-import lombok.extern.slf4j.Slf4j;
 import org.dows.auth.api.constant.SecurityConstants;
 import org.dows.auth.api.utils.JwtUtils;
 import org.dows.auth.api.utils.ServletUtils;
@@ -24,7 +23,6 @@ import java.io.OutputStream;
  *
  * @author vctgo
  */
-@Slf4j
 public class HeaderInterceptor implements AsyncHandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -80,13 +78,13 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
             os = response.getOutputStream();
             os.write(JSONObject.toJSONString(result).getBytes());
         } catch (Exception e) {
-            log.error("LoginInterceptor has exception!", e);
+            // log.error("LoginInterceptor has exception!", e);
         } finally {
             if (os != null) {
                 try {
                     os.close();
                 } catch (Exception e) {
-                    log.error("", e);
+                   //  log.error("", e);
                 }
             }
         }

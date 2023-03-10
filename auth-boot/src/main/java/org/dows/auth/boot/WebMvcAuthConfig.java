@@ -11,9 +11,9 @@ import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.List;
 
-@EnableWebMvc
-@Configuration
-public class WebMvcConfig implements WebMvcConfigurer {
+//@EnableWebMvc
+//@Configuration
+public class WebMvcAuthConfig implements WebMvcConfigurer {
 
     /** 不需要拦截地址 */
     public static final String[] excludeUrls = { "/admin/account/login", "/logout", "/refresh","/tenant/account/login","/user/account/login" };

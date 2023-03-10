@@ -5,11 +5,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dows.auth.biz.TokenService1Biz;
+import org.dows.auth.api.utils.StringUtils;
 import org.dows.auth.biz.UserDetailsServiceBiz;
-import org.dows.auth.biz.utils.AuthUtil;
-import org.dows.auth.biz.utils.SecurityUtils;
-import org.dows.auth.biz.utils.StringUtils;
+import org.dows.auth.biz.context.AuthUtil;
+import org.dows.auth.biz.context.SecurityUtils;
+import org.dows.auth.biz.redis.TokenServiceBiz;
 import org.dows.auth.form.LoginBodyForm;
 import org.dows.auth.vo.LoginUserVo;
 import org.dows.framework.api.Response;
@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("admin/account")
 public class AdminLoginRest {
 
-    private final TokenService1Biz tokenService1Biz;
+    private final TokenServiceBiz tokenServiceBiz;
 
     private final UserDetailsServiceBiz userDetailsServiceBiz;
 
@@ -44,7 +44,7 @@ public class AdminLoginRest {
         try{
             // 用户登录
             LoginUserVo vo =userDetailsServiceBiz.login(form.getUserName(),form.getPassword(),2);
-            return Response.ok(tokenService1Biz.createToken(vo));
+            return Response.ok(tokenServiceBiz.createToken(vo));
         }catch (Exception e){
             return Response.fail(e.getMessage());
         }
