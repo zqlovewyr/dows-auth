@@ -18,8 +18,7 @@ import java.util.Set;
  */
 @Data
 @Builder
-public class User implements Serializable
-{
+public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -115,7 +114,6 @@ public class User implements Serializable
     private Long expireTime;
 
 
-
     /**
      * 权限列表
      */
@@ -125,7 +123,6 @@ public class User implements Serializable
      * 角色列表
      */
     private Set<String> roles;
-
 
 
 }
