@@ -1,0 +1,23 @@
+#  微信小程序可使用下列URL获取授权Token
+#    grant_type
+#    必须使用 wechat_miniprogram
+#    client_id
+#    OAuth 2 客户ID
+#    client_secret
+#    OAuth 2 客户秘钥
+#    appid（可缺省）
+#    小程序appid
+#    从 0.0.1-alpha.2 开始，参数缺省 appid 时，可以从请求头中的 Referer 中自动截取
+#    code
+#    微信登录授权码
+#  /oauth2/token?grant_type=wechat_miniprogram&client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}&appid={APPID}&code={CODE}
+# 微信小程序配置
+wechat:
+  mini:
+    program:
+      # 默认微信小程序的权限
+      default-role: wechat_miniprogram
+      # 小程序账户列表
+      list:
+        - appid: ${wx_miniapp_appid:}
+          secret: ${wx_miniapp_secret:}
