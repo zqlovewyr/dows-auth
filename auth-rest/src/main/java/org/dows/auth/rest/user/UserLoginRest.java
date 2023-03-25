@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author lait.zhang
  * @since 2022-12-23 22:05:09
  */
-@Api(tags = "APP门店端登录")
+@Api(tags = "小程序登录")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
