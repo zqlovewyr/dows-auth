@@ -1,0 +1,4 @@
+org.dows.auth.security.service.impl.UserDetailsServiceImpl
+org.dows.auth.security.service.impl.RedisOAuth2AuthorizationService
+org.dows.auth.security.service.impl.RedisOAuth2AuthorizationConsentService
+org.dows.auth.security.service.impl.RemoteRegisteredClientRepository

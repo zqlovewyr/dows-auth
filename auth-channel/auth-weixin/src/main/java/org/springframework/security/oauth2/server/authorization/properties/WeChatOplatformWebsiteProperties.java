@@ -1,0 +1,103 @@
+package org.springframework.security.oauth2.server.authorization.properties;
+
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
+
+/**
+ * 微信开放平台 网站应用 属性配置类
+ */
+@Data
+@Component
+@ConfigurationProperties("wechat.oplatform.website")
+public class WeChatOplatformWebsiteProperties {
+
+    /**
+     * 微信开放平台 网站应用 属性配置列表
+     */
+    private List<WeChatOplatformWebsite> list;
+
+    /**
+     * 默认微信开放平台 网站应用 的权限
+     */
+    private String defaultRole;
+
+    /**
+     * 默认 AppID
+     */
+    @Getter(AccessLevel.NONE)
+    private String defaultAppid;
+
+    public String getDefaultAppid() {
+        if (StringUtils.hasText(defaultAppid)) {
+            return defaultAppid;
+        }
+        if (list == null) {
+            return null;
+        }
+        if (list.size() > 0) {
+            return list.get(0).appid;
+        }
+        return null;
+    }
+
+    /**
+     * 微信开放平台 网站应用 属性配置类
+     */
+    @Data
+    public static class WeChatOplatformWebsite {
+
+        /**
+         * AppID
+         */
+        private String appid;
+
+        /**
+         * AppSecret
+         */
+        private String secret;
+
+        /**
+         * 重定向的网址前缀（程序使用时，会在后面拼接 /{@link #appid}）
+         */
+        private String redirectUriPrefix;
+
+        /**
+         * OAuth2 客户ID
+         */
+        private String clientId;
+
+        /**
+         * OAuth2 客户秘钥
+         */
+        private String clientSecret;
+
+        /**
+         * 获取 Token URL 前缀
+         */
+        private String tokenUrlPrefix;
+
+        /**
+         * 授权范围
+         */
+        private String scope;
+
+        /**
+         * 登录成功后重定向的URL
+         */
+        private String successUrl;
+
+        /**
+         * 登录成功后重定向的URL OAuth2.1 授权 Token Name
+         */
+        private String parameterName = "access_token";
+
+    }
+
+}
