@@ -1,4 +1,4 @@
-package org.dows.auth;
+package org.dows.auth.api.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

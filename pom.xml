@@ -22,6 +22,7 @@
         <module>auth-rest</module>
         <module>auth-pojo</module>
         <module>auth-boot</module>
+        <module>auth-security</module>
     </modules>
 
     <dependencyManagement>

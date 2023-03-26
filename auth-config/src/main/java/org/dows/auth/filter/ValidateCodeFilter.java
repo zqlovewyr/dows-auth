@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.auth.Constant;
-import org.dows.auth.DowsAuthenticationException;
+import org.dows.auth.api.exception.DowsAuthenticationException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.util.AntPathMatcher;
