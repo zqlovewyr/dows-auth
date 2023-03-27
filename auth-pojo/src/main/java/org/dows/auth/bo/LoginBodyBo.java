@@ -30,4 +30,9 @@ public class LoginBodyBo
      */
     private String openid;
 
+    /**
+     * appId
+     */
+    private String appId;
+
 }

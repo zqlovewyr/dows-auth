@@ -2,6 +2,7 @@ package org.dows.auth.service;
 
 import org.dows.auth.bo.LoginBodyBo;
 import org.dows.auth.vo.AccountVo;
+import org.dows.auth.vo.AppInfoVo;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface LoginService {
     List<AccountVo> selectAccountPage(LoginBodyBo loginBodyBo);
 
     void saveWxAccount(AccountVo accountVo);
+
+    List<AppInfoVo> selectAppInfo(LoginBodyBo loginBodyBo);
 }

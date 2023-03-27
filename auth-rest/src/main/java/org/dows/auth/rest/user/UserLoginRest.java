@@ -1,23 +1,21 @@
 package org.dows.auth.rest.user;
 
 
-import cn.binarywang.wx.miniapp.api.WxMaService;
-import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.auth.api.utils.StringUtils;
 import org.dows.auth.biz.UserDetailsServiceBiz;
-import org.dows.auth.biz.configure.WxMaConfiguration;
-import org.dows.auth.biz.configure.WxMaProperties;
 import org.dows.auth.biz.context.AuthUtil;
 import org.dows.auth.biz.context.SecurityUtils;
 import org.dows.auth.biz.redis.TokenServiceBiz;
 import org.dows.auth.form.LoginBodyForm;
+import org.dows.auth.utils.GetOpenIdUtil;
+import org.dows.auth.vo.AppInfoVo;
 import org.dows.auth.vo.LoginUserVo;
 import org.dows.framework.api.Response;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,23 +40,31 @@ public class UserLoginRest {
 
     private final UserDetailsServiceBiz userDetailsServiceBiz;
 
-    @Autowired
-    private WxMaProperties wxMaProperties;
+//    @Autowired
+//    private WxMaProperties wxMaProperties;
 
     @PostMapping("/login")
     @ApiOperation(value = "登录")
     public Response login(@RequestBody LoginBodyForm form)
     {
         try{
-            WxMaProperties.Config config = wxMaProperties.getConfigs().get(0);
-            final WxMaService wxService = WxMaConfiguration.getMaService(config.getAppid());
-            WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(form.getCode());
-            if(StringUtils.isNull(session.getOpenid())){
+//            WxMaProperties.Config config = wxMaProperties.getConfigs().get(0);
+//            final WxMaService wxService = WxMaConfiguration.getMaService(config.getAppid());
+//            WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(form.getCode());
+            AppInfoVo appInfoVo = userDetailsServiceBiz.selectAppInfo(form.getAppId());
+            if(appInfoVo == null){
+                return Response.fail("此商户未配置");
+            }
+            GetOpenIdUtil getOpenIdUtil=new GetOpenIdUtil();
+            String jsonId = getOpenIdUtil.getopenid(appInfoVo.getAppId(),form.getCode(),appInfoVo.getSecretKey());
+            JSONObject jsonObject = JSONObject.parseObject(jsonId);
+            String openid = jsonObject.get("openid").toString();
+            if(StringUtils.isNull(openid)){
                 log.error("用户登录失败：openid获取失败");
                 return Response.fail("网络异常");
             }
             // 用户登录
-            LoginUserVo vo =userDetailsServiceBiz.login(session.getOpenid());
+            LoginUserVo vo =userDetailsServiceBiz.login(openid);
             return Response.ok(tokenServiceBiz.createToken(vo));
         }catch (Exception e){
             return Response.fail(e.getMessage());

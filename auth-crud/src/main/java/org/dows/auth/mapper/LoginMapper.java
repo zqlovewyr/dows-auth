@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.dows.auth.bo.LoginBodyBo;
 import org.dows.auth.entity.User;
 import org.dows.auth.vo.AccountVo;
+import org.dows.auth.vo.AppInfoVo;
 import org.dows.framework.crud.mybatis.MybatisCrudMapper;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface LoginMapper extends MybatisCrudMapper<User> {
     List<AccountVo> selectAccountPage(@Param("loginBodyBo")LoginBodyBo loginBodyBo);
 
     void saveWxAccount(@Param("accountVo")AccountVo accountVo);
+
+    List<AppInfoVo> selectAppInfo(@Param("loginBodyBo")LoginBodyBo loginBodyBo);
 }

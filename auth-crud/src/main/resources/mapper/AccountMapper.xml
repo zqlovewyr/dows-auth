@@ -66,5 +66,21 @@
             <if test="openid != null and openid != ''">#{accountVo.openid},</if>
         </trim>
     </insert>
-
+    <select id="selectAppInfo" parameterType="org.dows.auth.bo.LoginBodyBo" resultType="org.dows.auth.vo.AppInfoVo">
+        SELECT
+        t1.secret_id,
+        t1.secret_key,
+        t1.app_key,
+        t1.app_id,
+        t1.accountId,
+        t1.account_id,
+        t1.tenant_name,
+        t1.tenant_id
+        FROM
+        app_license t1
+        WHERE 1=1
+        <if test="loginBodyBo.appId != null and loginBodyBo.appId != ''">
+            AND t1.app_id = #{loginBodyBo.appId}
+        </if>
+    </select>
 </mapper>

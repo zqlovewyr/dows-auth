@@ -29,4 +29,10 @@ public class LoginBodyForm
     @ApiModelProperty(value = "小程序code码 登录")
     private String code;
 
+    /**
+     * 小程序appId
+     */
+    @ApiModelProperty(value = "小程序appId 登录")
+    private String appId;
+
 }

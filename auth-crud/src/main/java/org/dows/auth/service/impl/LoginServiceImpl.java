@@ -4,6 +4,7 @@ import org.dows.auth.bo.LoginBodyBo;
 import org.dows.auth.mapper.LoginMapper;
 import org.dows.auth.service.LoginService;
 import org.dows.auth.vo.AccountVo;
+import org.dows.auth.vo.AppInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,11 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void saveWxAccount(AccountVo accountVo) {
-
+        loginMapper.saveWxAccount(accountVo);
     }
 
+    @Override
+    public List<AppInfoVo> selectAppInfo(LoginBodyBo loginBodyBo) {
+        return loginMapper.selectAppInfo(loginBodyBo);
+    }
 }

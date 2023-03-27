@@ -1,13 +1,15 @@
 package org.dows.auth.biz;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import org.dows.auth.api.constant.UserConstants;
 import org.dows.auth.api.exception.AuthException;
 import org.dows.auth.api.utils.StringUtils;
 import org.dows.auth.biz.context.SecurityUtils;
 import org.dows.auth.bo.LoginBodyBo;
-import org.dows.auth.api.constant.UserConstants;
 import org.dows.auth.service.LoginService;
 import org.dows.auth.vo.AccountVo;
+import org.dows.auth.vo.AppInfoVo;
 import org.dows.auth.vo.LoginUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -202,6 +204,16 @@ public class UserDetailsServiceBiz{
 
         //  passwordServiceBiz.validate(userInfo, password);
         return userInfo;
+    }
+
+    public AppInfoVo selectAppInfo(String appId){
+        LoginBodyBo bodyBo = new LoginBodyBo();
+        bodyBo.setAppId(appId);
+        List<AppInfoVo> vos = loginService.selectAppInfo(bodyBo)
+        if(CollectionUtil.isEmpty(vos)){
+            return null;
+        }
+        return vos.get(0);
     }
     // 获取8为随机编码
     public String genRandomNum()
