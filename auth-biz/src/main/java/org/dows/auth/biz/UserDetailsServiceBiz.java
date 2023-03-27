@@ -209,7 +209,7 @@ public class UserDetailsServiceBiz{
     public AppInfoVo selectAppInfo(String appId){
         LoginBodyBo bodyBo = new LoginBodyBo();
         bodyBo.setAppId(appId);
-        List<AppInfoVo> vos = loginService.selectAppInfo(bodyBo)
+        List<AppInfoVo> vos = loginService.selectAppInfo(bodyBo);
         if(CollectionUtil.isEmpty(vos)){
             return null;
         }
