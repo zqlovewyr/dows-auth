@@ -2,7 +2,7 @@ package org.dows.auth.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
-import org.dows.auth.entity.User;
+import org.dows.auth.entity.OauthUser;
 import org.dows.auth.mapper.UserMapper;
 import org.dows.auth.service.UserService;
 import org.springframework.stereotype.Service;
@@ -13,19 +13,19 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @AllArgsConstructor
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, OauthUser> implements UserService {
     @Override
     public int updatePassword(String userId, String password, String newPassword) {
         return 0;
     }
 
     @Override
-    public void saveUserRole(User user) {
+    public void saveUserRole(OauthUser oauthUser) {
 
     }
 
     @Override
-    public void updateUserRole(User user) {
+    public void updateUserRole(OauthUser oauthUser) {
 
     }
 

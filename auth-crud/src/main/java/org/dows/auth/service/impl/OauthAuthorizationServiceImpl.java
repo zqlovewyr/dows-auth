@@ -1,8 +1,8 @@
 package org.dows.auth.service.impl;
 
-import org.dows.auth.crud.entity.OauthAuthorization;
-import org.dows.auth.crud.mapper.OauthAuthorizationMapper;
-import org.dows.auth.crud.service.OauthAuthorizationService;
+import org.dows.auth.entity.OauthAuthorization;
+import org.dows.auth.mapper.OauthAuthorizationMapper;
+import org.dows.auth.service.OauthAuthorizationService;
 import org.dows.framework.crud.mybatis.MybatisCrudServiceImpl;
 import org.springframework.stereotype.Service;
 

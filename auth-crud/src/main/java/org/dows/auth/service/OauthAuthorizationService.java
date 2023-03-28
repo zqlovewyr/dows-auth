@@ -1,6 +1,6 @@
 package org.dows.auth.service;
 
-import org.dows.auth.crud.entity.OauthAuthorization;
+import org.dows.auth.entity.OauthAuthorization;
 import org.dows.framework.crud.mybatis.MybatisCrudService;
 
 

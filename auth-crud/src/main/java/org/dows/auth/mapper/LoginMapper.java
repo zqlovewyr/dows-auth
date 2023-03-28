@@ -3,7 +3,7 @@ package org.dows.auth.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.dows.auth.bo.LoginBodyBo;
-import org.dows.auth.entity.User;
+import org.dows.auth.entity.OauthUser;
 import org.dows.auth.vo.AccountVo;
 import org.dows.framework.crud.mybatis.MybatisCrudMapper;
 
@@ -17,7 +17,7 @@ import java.util.List;
  * Description:
  */
 @Mapper
-public interface LoginMapper extends MybatisCrudMapper<User> {
+public interface LoginMapper extends MybatisCrudMapper<OauthUser> {
 
     // public Response login(String username, String password);
 

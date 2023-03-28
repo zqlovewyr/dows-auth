@@ -1,6 +1,6 @@
 package org.dows.auth.service.impl;
 
-import org.dows.auth.entity.LoginUser;
+import org.dows.auth.entity.OauthLogin;
 import org.dows.auth.service.LoginService;
 import org.dows.auth.utils.JwtUtil;
 import org.dows.auth.utils.RedisCache;
@@ -37,11 +37,11 @@ public class LoginServiceImpl implements LoginService {
             throw new RuntimeException("用户名或密码错误");
         }
         //使用userid生成token
-        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
-        String userId = loginUser.getUser().getId().toString();
+        OauthLogin oauthLogin = (OauthLogin) authenticate.getPrincipal();
+        String userId = oauthLogin.getOauthUser().getId().toString();
         String jwt = JwtUtil.createJWT(userId);
         //authenticate存入redis
-        redisCache.setCacheObject("login:"+userId,loginUser);
+        redisCache.setCacheObject("login:"+userId, oauthLogin);
         //把token响应给前端
         HashMap<String,String> map = new HashMap<>();
         map.put("token",jwt);

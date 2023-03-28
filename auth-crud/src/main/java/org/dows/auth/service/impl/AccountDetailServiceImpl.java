@@ -12,11 +12,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public class AccountDetailServiceImpl implements UserDetailsService {
 
 
-    private final AccountBiz accountBiz;
+    private final AccountApi accountApi;
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String accountName) throws UsernameNotFoundException {
         // 查询账号信息
-        AccountInfo accountInfo = accountBiz.findAccount(username);
+        AccountInfo accountInfo = accountApi.findAccountByAccountname(accountName);
         // 查询权限
 
         return User.builder()

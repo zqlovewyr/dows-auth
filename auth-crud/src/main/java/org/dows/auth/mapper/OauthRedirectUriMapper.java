@@ -1,7 +1,7 @@
 package org.dows.auth.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.dows.auth.crud.entity.OauthRedirectUri;
+import org.dows.auth.entity.OauthRedirectUri;
 import org.dows.framework.crud.mybatis.MybatisCrudMapper;
 
 /**

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.security.core.userdetails.User;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -18,8 +19,7 @@ import java.util.Set;
  */
 @Data
 @Builder
-public class User implements Serializable
-{
+public class OauthUser extends User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -115,7 +115,6 @@ public class User implements Serializable
     private Long expireTime;
 
 
-
     /**
      * 权限列表
      */
@@ -125,7 +124,6 @@ public class User implements Serializable
      * 角色列表
      */
     private Set<String> roles;
-
 
 
 }
