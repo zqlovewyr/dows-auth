@@ -1,13 +1,18 @@
 package org.dows.auth.service.impl;
 
-import org.dows.auth.bo.LoginBodyBo;
-import org.dows.auth.mapper.LoginMapper;
+import org.dows.auth.entity.LoginUser;
 import org.dows.auth.service.LoginService;
-import org.dows.auth.vo.AccountVo;
+import org.dows.auth.utils.JwtUtil;
+import org.dows.auth.utils.RedisCache;
+import org.dows.framework.api.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * Author:      gfl
@@ -18,16 +23,28 @@ import java.util.List;
  */
 @Service
 public class LoginServiceImpl implements LoginService {
+
     @Autowired
-    private LoginMapper loginMapper;
-    @Override
-    public List<AccountVo> selectAccountPage(LoginBodyBo loginBodyBo) {
-        return loginMapper.selectAccountPage(loginBodyBo);
-    }
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private RedisCache redisCache;
 
     @Override
-    public void saveWxAccount(AccountVo accountVo) {
-
+    public Response login(String username, String password) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,password);
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        if(Objects.isNull(authenticate)){
+            throw new RuntimeException("用户名或密码错误");
+        }
+        //使用userid生成token
+        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
+        String userId = loginUser.getUser().getId().toString();
+        String jwt = JwtUtil.createJWT(userId);
+        //authenticate存入redis
+        redisCache.setCacheObject("login:"+userId,loginUser);
+        //把token响应给前端
+        HashMap<String,String> map = new HashMap<>();
+        map.put("token",jwt);
+        return Response.ok(map,"登陆成功");
     }
-
 }

@@ -1,9 +1,6 @@
 package org.dows.auth.service;
 
-import org.dows.auth.bo.LoginBodyBo;
-import org.dows.auth.vo.AccountVo;
-
-import java.util.List;
+import org.dows.framework.api.Response;
 
 /**
  * Author:      gfl
@@ -14,8 +11,5 @@ import java.util.List;
  */
 public interface LoginService {
 
-    // public Response login(String username, String password);
-    List<AccountVo> selectAccountPage(LoginBodyBo loginBodyBo);
-
-    void saveWxAccount(AccountVo accountVo);
+    public Response login(String username, String password);
 }
