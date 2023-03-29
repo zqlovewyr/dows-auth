@@ -2,6 +2,7 @@ package org.dows.auth.form;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.dows.auth.enums.MiniAppType;
 
 /**
  * 用户登录对象
@@ -35,4 +36,9 @@ public class LoginBodyForm
     @ApiModelProperty(value = "小程序appId 登录")
     private String appId;
 
+    /**
+     * 小程序类型
+     */
+    @ApiModelProperty(value = "小程序类型")
+    private MiniAppType miniAppType;
 }

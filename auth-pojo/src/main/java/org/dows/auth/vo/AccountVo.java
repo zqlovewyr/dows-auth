@@ -95,4 +95,7 @@ public class AccountVo {
     @ApiModelProperty(value = "账号区分：1、总控端2、总部端、3、门店端APP4、小程序流量用户")
     private Integer accountType;
 
+    @ApiModelProperty(value = "支付宝userId")
+    private String userId;
+
 }

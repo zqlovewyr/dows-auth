@@ -49,6 +49,14 @@ wx:
         aesKey: #微信小程序消息服务器配置的EncodingAESKey
         msgDataFormat: JSON
 
+# 支付宝配置
+alipay:
+  miniapp:
+    configs:
+        signType: RSA2 #商户生成签名字符串所使用的签名算法类型，目前支持RSA2和RSA，推荐使用RSA2
+        charset: UTF-8 #请求和签名使用的字符编码格式，支持GBK和UTF-8
+        format: json #参数返回格式
+        serverUrl: https://openapi.alipay.com/gateway.do #支付宝网关（固定）
 
 
 

@@ -35,4 +35,9 @@ public class LoginBodyBo
      */
     private String appId;
 
+    /**
+     * userId
+     */
+    private String userId;
+
 }

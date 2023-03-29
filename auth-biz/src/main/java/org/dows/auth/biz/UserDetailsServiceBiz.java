@@ -27,16 +27,16 @@ public class UserDetailsServiceBiz{
     @Autowired
     private LoginService loginService;
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails userDetails = org.springframework.security.core.userdetails.User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(userDetails);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails userDetails = org.springframework.security.core.userdetails.User.withDefaultPasswordEncoder()
+//                .username("user")
+//                .password("password")
+//                .roles("USER")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(userDetails);
+//    }
 
 
 //    /**
@@ -169,6 +169,74 @@ public class UserDetailsServiceBiz{
         else {
             accountVo = accountVos.get(0);
         }
+        LoginUserVo userInfo = new LoginUserVo();
+        userInfo.setAccountId(accountVo.getAccountId());
+        userInfo.setTenantId(accountVo.getTenantId());
+        userInfo.setAppId(accountVo.getAppId());
+        userInfo.setAccountName(accountVo.getAccountName());
+        userInfo.setPassword(accountVo.getPassword());
+        userInfo.setAvatar(accountVo.getAvatar());
+        userInfo.setPhone(accountVo.getPhone());
+        userInfo.setAccountClientNo(accountVo.getAccountClientNo());
+        userInfo.setSex(accountVo.getSex());
+        userInfo.setSource(accountVo.getSource());
+        userInfo.setJob(accountVo.getJob());
+        userInfo.setBirthday(accountVo.getBirthday());
+        userInfo.setEducation(accountVo.getEducation());
+        userInfo.setShengXiao(accountVo.getShengXiao());
+        userInfo.setConstellation(accountVo.getConstellation());
+        userInfo.setCreateTime(accountVo.getCreateTime());
+        //线程塞入租户ID
+        SecurityUtils.setTenantId(userInfo.getTenantId());
+        // 用户AccountId
+        SecurityUtils.setAccountId(userInfo.getAccountId());
+        //先查询是否被停用了租户
+//        if (userInfo.getTenantStatus() != null && UserStatus.DISABLE.getCode().equals(userInfo.getTenantStatus().toString()))
+//        {
+//            recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, "当前租户已经被停用，请联系管理员");
+//            throw new ServiceException("当前租户已经被停用");
+//        }
+//        if (userInfo.getTenantEndDate() != null && userInfo.getTenantEndDate().compareTo(new Date()) < 0)
+//        {
+//            recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, "当前租户已超过租赁日期，请联系管理员");
+//            throw new ServiceException("当前租户已超过租赁日期");
+//        }
+
+        //  passwordServiceBiz.validate(userInfo, password);
+        return userInfo;
+    }
+
+    /**
+     * 支付宝小程序端登录使用
+     *
+     * @param userId
+     * @return
+     */
+    public LoginUserVo loginAliMiniApp(String userId) {
+        // 查询用户信息
+        LoginBodyBo bodyBo = new LoginBodyBo();
+        bodyBo.setAccountType(4);
+        bodyBo.setUserId(userId);
+        AccountVo accountVo = null;
+        List<AccountVo> accountVos = loginService.selectAccountPage(bodyBo);
+
+        if (accountVos.size() == 0) {
+            String aliUserNo = genRandomNum();
+            AccountVo aliUser = new AccountVo();
+            aliUser.setUserId(userId);
+            aliUser.setAccountName(aliUserNo);
+            aliUser.setAccountId(IdWorker.getIdStr());
+            aliUser.setSource("ali");
+            aliUser.setAccountType(4); // 流量用户
+            loginService.saveWxAccount(aliUser);
+            accountVo = aliUser;
+        } else {
+            accountVo = accountVos.get(0);
+        }
+        return setUserInfo(accountVo);
+    }
+
+    private static LoginUserVo setUserInfo(AccountVo accountVo) {
         LoginUserVo userInfo = new LoginUserVo();
         userInfo.setAccountId(accountVo.getAccountId());
         userInfo.setTenantId(accountVo.getTenantId());

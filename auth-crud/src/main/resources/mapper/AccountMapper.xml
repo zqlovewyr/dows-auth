@@ -39,6 +39,9 @@
         <if test="loginBodyBo.openid != null and loginBodyBo.openid != ''">
             AND t1.openid = #{loginBodyBo.openid}
         </if>
+        <if test="loginBodyBo.userId != null and loginBodyBo.userId != ''">
+            AND t1.user_id = #{loginBodyBo.userId}
+        </if>
     </select>
 
     <insert id="saveWxAccount" parameterType="org.dows.auth.vo.AccountVo" useGeneratedKeys="true" keyProperty="id">
@@ -53,6 +56,7 @@
             dt,
             <if test="accountType != null">account_type,</if>
             <if test="openid != null and openid != ''">openid,</if>
+            <if test="userId != null and userId != ''">user_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="accountId != null and accountId != ''">#{accountVo.accountId},</if>
@@ -64,6 +68,7 @@
             sysdate(),
             <if test="accountType != null">#{accountVo.accountType},</if>
             <if test="openid != null and openid != ''">#{accountVo.openid},</if>
+            <if test="userId != null and userId != ''">#{accountVo.userId},</if>
         </trim>
     </insert>
     <select id="selectAppInfo" parameterType="org.dows.auth.bo.LoginBodyBo" resultType="org.dows.auth.vo.AppInfoVo">
