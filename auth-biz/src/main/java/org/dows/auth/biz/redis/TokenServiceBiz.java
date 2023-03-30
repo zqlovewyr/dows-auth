@@ -65,6 +65,7 @@ public class TokenServiceBiz
         claimsMap.put(SecurityConstants.DETAILS_USERNAME, userName);
         //租户id
         claimsMap.put(SecurityConstants.DETAILS_TENANT_ID, tenantId);
+        claimsMap.put(SecurityConstants.ACCOUNT_ID, loginUser.getAccountId());
         //部门id
         // claimsMap.put(SecurityConstants.DETAILS_DEPT_ID, loginUser);
         // 接口返回信息
@@ -72,6 +73,7 @@ public class TokenServiceBiz
         rspMap.put("access_token", JwtUtils.createToken(claimsMap));
         rspMap.put("expires_in", expireTime);
         rspMap.put("tenant_id", tenantId);
+        rspMap.put("account_id", loginUser.getAccountId());
         return rspMap;
     }
 
