@@ -47,6 +47,8 @@ public class SecurityConfigurer {
         List<String> permitAll = authIgnoreConfig.getIgnoreUrls();
         permitAll.add("/error");
         permitAll.add("/v3/**");
+        // 暂时先放开所有请求
+        permitAll.add("/**");
         permitAll.add("/swagger-ui/**");
         permitAll.add("/swagger-resources/**");
         permitAll.add(Constant.TOKEN_ENTRY_POINT_URL);
