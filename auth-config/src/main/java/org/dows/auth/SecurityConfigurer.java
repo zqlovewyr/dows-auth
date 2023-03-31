@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
-@EnableWebSecurity
+//@EnableWebSecurity
 public class SecurityConfigurer {
 
     @Autowired
@@ -42,7 +42,7 @@ public class SecurityConfigurer {
     @Autowired
     private AuthIgnoreConfig authIgnoreConfig;
 
-    @Bean
+    /*@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         List<String> permitAll = authIgnoreConfig.getIgnoreUrls();
         permitAll.add("/error");
@@ -87,7 +87,7 @@ public class SecurityConfigurer {
         // 用户管理service
         http.userDetailsService(userDetailsService());
         return http.build();
-    }
+    }*/
 
     // 解决跨域
     public CorsConfigurationSource corsConfigurationSource() {
@@ -110,14 +110,14 @@ public class SecurityConfigurer {
     public DowsDaoAuthenticationProvider authenticationProvider() {
         DowsDaoAuthenticationProvider authenticationProvider = new DowsDaoAuthenticationProvider();
         authenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
-        authenticationProvider.setUserDetailsService(userDetailsService());
+//        authenticationProvider.setUserDetailsService(userDetailsService());
         return authenticationProvider;
     }
 
-    @Bean
+   /* @Bean
     public AuthenticationManager authenticationManager() {
         return new ProviderManager(Arrays.asList(authenticationProvider()));
-    }
+    }*/
 
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
