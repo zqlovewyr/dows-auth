@@ -16,7 +16,7 @@ import java.util.List;
 public class WebMvcAuthConfig implements WebMvcConfigurer {
 
     /** 不需要拦截地址 */
-    public static final String[] excludeUrls = { "/admin/account/login", "/logout", "/refresh","/tenant/account/login","/user/account/login" };
+    public static final String[] excludeUrls = { "/admin/account/login", "/logout", "/refresh","/tenant/account/login","/user/account/login","/authEventReception/wechat/auth_event" };
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
@@ -72,7 +72,7 @@ public class WebMvcAuthConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         // 注册拦截器
         registry.addInterceptor(getHeaderInterceptor())
-                .addPathPatterns("/**")
+//                .addPathPatterns("/**")
                 .excludePathPatterns(excludeUrls)
                 .excludePathPatterns("/acc/doLogin");
     }

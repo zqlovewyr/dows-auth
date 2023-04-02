@@ -32,10 +32,30 @@
             <artifactId>framework-api</artifactId>
         </dependency>
 
+
+
+
+
+
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
         </dependency>
+
+        <!--微信相关jar引入 -->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-pay</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-open</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+
 
     </dependencies>
 
