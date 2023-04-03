@@ -101,6 +101,12 @@ public class LoginUserVo implements Serializable
     @ApiModelProperty(value = "年龄")
     private Integer age;
 
+    @ApiModelProperty(value = "微信openid")
+    private String openid;
+
+    @ApiModelProperty(value = "支付宝userId")
+    private String userId;
+
     /**
      * 登录时间
      */

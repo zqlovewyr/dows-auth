@@ -27,12 +27,17 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public void saveWxAccount(AccountVo accountVo) {
-        loginMapper.saveWxAccount(accountVo);
+    public void saveMiniAppUserAccount(AccountVo accountVo) {
+        loginMapper.saveMiniAppUserAccount(accountVo);
     }
 
     @Override
     public List<AppInfoVo> selectAppInfo(LoginBodyBo loginBodyBo) {
         return loginMapper.selectAppInfo(loginBodyBo);
+    }
+
+    @Override
+    public int selectMaxStoreUserNo(AccountVo accountVo) {
+        return loginMapper.selectMaxStoreUserNo(accountVo);
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -47,7 +48,7 @@ public class TokenServiceBiz
     /**
      * 创建令牌
      */
-    public Map<String, Object> createToken(LoginUserVo loginUser)
+    public Map<String, Object> createToken(LoginUserVo loginUser, Integer accountType)
     {
         String token = IdUtils.fastUUID();
         Long userId = loginUser.getId();
@@ -73,7 +74,11 @@ public class TokenServiceBiz
         rspMap.put("access_token", JwtUtils.createToken(claimsMap));
         rspMap.put("expires_in", expireTime);
         rspMap.put("tenant_id", tenantId);
-        rspMap.put("account_id", loginUser.getAccountId());
+        rspMap.put("accountId", loginUser.getAccountId());
+        if (accountType == 4) {
+            Optional.ofNullable(loginUser.getOpenid()).ifPresent(value -> rspMap.put("openid", value));
+            Optional.ofNullable(loginUser.getOpenid()).ifPresent(value -> rspMap.put("userId", value));
+        }
         return rspMap;
     }
 

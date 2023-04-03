@@ -24,7 +24,9 @@ public interface LoginMapper extends MybatisCrudMapper<User> {
 
     List<AccountVo> selectAccountPage(@Param("loginBodyBo")LoginBodyBo loginBodyBo);
 
-    void saveWxAccount(@Param("accountVo")AccountVo accountVo);
+    void saveMiniAppUserAccount(@Param("accountVo")AccountVo accountVo);
 
     List<AppInfoVo> selectAppInfo(@Param("loginBodyBo")LoginBodyBo loginBodyBo);
+
+    int selectMaxStoreUserNo(@Param("accountVo") AccountVo accountVo);
 }

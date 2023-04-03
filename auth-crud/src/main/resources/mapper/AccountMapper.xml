@@ -23,13 +23,10 @@
             t3.nation,
             t3.client_no AS accountClientNo
         FROM
-            account_instance t1,
-            account_tenant t2,
-            account_user_info t3
-        WHERE
-            t1.account_id = t2.account_id
-          AND t3.account_id = t1.account_id
-
+            account_instance t1
+        LEFT JOIN account_tenant t2 ON t1.account_id = t2.account_id
+        LEFT JOIN account_user_info t3 ON t3.account_id = t1.account_id
+        WHERE 1 = 1
         <if test="loginBodyBo.userName != null and loginBodyBo.userName != ''">
             AND t1.account_name = #{loginBodyBo.userName}
         </if>
@@ -42,34 +39,44 @@
         <if test="loginBodyBo.userId != null and loginBodyBo.userId != ''">
             AND t1.user_id = #{loginBodyBo.userId}
         </if>
+        <if test="loginBodyBo.storeId != null and loginBodyBo.storeId != ''">
+            AND t1.store_id = #{loginBodyBo.storeId}
+        </if>
     </select>
 
-    <insert id="saveWxAccount" parameterType="org.dows.auth.vo.AccountVo" useGeneratedKeys="true" keyProperty="id">
+    <insert id="saveMiniAppUserAccount" parameterType="org.dows.auth.vo.AccountVo" useGeneratedKeys="true" keyProperty="id">
         insert into account_instance
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="accountId != null and accountId != ''">account_id,</if>
-            <if test="accountName != null and accountName != ''">account_name,</if>
-            <if test="avatar != null and avatar != ''">avatar,</if>
-            <if test="source != null and source != ''">source,</if>
-            <if test="phone != null and phone != ''">phone,</if>
-            <if test="appId != null and appId != ''">app_id,</if>
+            <if test="accountVo.accountId != null and accountVo.accountId != ''">account_id,</if>
+            <if test="accountVo.accountName != null and accountVo.accountName != ''">account_name,</if>
+            <if test="accountVo.avatar != null and accountVo.avatar != ''">avatar,</if>
+            <if test="accountVo.source != null and accountVo.source != ''">source,</if>
+            <if test="accountVo.phone != null and accountVo.phone != ''">phone,</if>
+            <if test="accountVo.appId != null and accountVo.appId != ''">app_id,</if>
             dt,
-            <if test="accountType != null">account_type,</if>
-            <if test="openid != null and openid != ''">openid,</if>
-            <if test="userId != null and userId != ''">user_id,</if>
+            <if test="accountVo.accountType != null">account_type,</if>
+            <if test="accountVo.storeId != null and accountVo.storeId != ''">store_id,</if>
+            <if test="accountVo.openid != null and accountVo.openid != ''">openid,</if>
+            <if test="accountVo.userId != null and accountVo.userId != ''">user_id,</if>
+            <if test="accountVo.merchantAccountId != null and accountVo.merchantAccountId != ''">merchant_account_id,</if>
+            <if test="accountVo.userNo != null ">user_no,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="accountId != null and accountId != ''">#{accountVo.accountId},</if>
-            <if test="accountName != null and accountName != ''">#{accountVo.accountName},</if>
-            <if test="avatar != null and avatar != ''">#{accountVo.avatar},</if>
-            <if test="source != null and source != ''">#{accountVo.source},</if>
-            <if test="phone != null and phone != ''">#{accountVo.phone},</if>
-            <if test="appId != null and appId != ''">#{accountVo.appId},</if>
+            <if test="accountVo.accountId != null and accountVo.accountId != ''">#{accountVo.accountId},</if>
+            <if test="accountVo.accountName != null and accountVo.accountName != ''">#{accountVo.accountName},</if>
+            <if test="accountVo.avatar != null and accountVo.avatar != ''">#{accountVo.avatar},</if>
+            <if test="accountVo.source != null and accountVo.source != ''">#{accountVo.source},</if>
+            <if test="accountVo.phone != null and accountVo.phone != ''">#{accountVo.phone},</if>
+            <if test="accountVo.appId != null and accountVo.appId != ''">#{accountVo.appId},</if>
             sysdate(),
-            <if test="accountType != null">#{accountVo.accountType},</if>
-            <if test="openid != null and openid != ''">#{accountVo.openid},</if>
-            <if test="userId != null and userId != ''">#{accountVo.userId},</if>
+            <if test="accountVo.accountType != null">#{accountVo.accountType},</if>
+            <if test="accountVo.storeId != null and accountVo.storeId != ''">#{accountVo.storeId},</if>
+            <if test="accountVo.openid != null and accountVo.openid != ''">#{accountVo.openid},</if>
+            <if test="accountVo.userId != null and accountVo.userId != ''">#{accountVo.userId},</if>
+            <if test="accountVo.merchantAccountId != null and accountVo.merchantAccountId != ''">#{accountVo.merchantAccountId},</if>
+            <if test="accountVo.userNo != null ">#{accountVo.userNo},</if>
         </trim>
+
     </insert>
     <select id="selectAppInfo" parameterType="org.dows.auth.bo.LoginBodyBo" resultType="org.dows.auth.vo.AppInfoVo">
         SELECT
@@ -87,5 +94,9 @@
         <if test="loginBodyBo.appId != null and loginBodyBo.appId != ''">
             AND t1.app_id = #{loginBodyBo.appId}
         </if>
+    </select>
+
+    <select id="selectMaxStoreUserNo" parameterType="org.dows.auth.vo.AccountVo" resultType="int">
+        SELECT IFNULL(max(user_no), 0) FROM account_instance WHERE store_id = #{accountVo.storeId} and source = #{accountVo.source}
     </select>
 </mapper>

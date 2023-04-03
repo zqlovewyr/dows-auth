@@ -98,4 +98,13 @@ public class AccountVo {
     @ApiModelProperty(value = "支付宝userId")
     private String userId;
 
+    @ApiModelProperty(value = "商户id")
+    private String merchantAccountId;
+
+    @ApiModelProperty(value = "门店id")
+    private String storeId;
+
+    @ApiModelProperty(value = "客户编号")
+    private Integer userNo;
+
 }

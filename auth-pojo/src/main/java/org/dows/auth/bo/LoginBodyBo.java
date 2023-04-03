@@ -40,4 +40,9 @@ public class LoginBodyBo
      */
     private String userId;
 
+    /**
+     * storeId
+     */
+    private String storeId;
+
 }

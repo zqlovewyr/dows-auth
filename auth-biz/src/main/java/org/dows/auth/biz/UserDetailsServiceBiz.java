@@ -2,11 +2,16 @@ package org.dows.auth.biz;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.dows.account.api.AccountUserApi;
+import org.dows.account.bo.AccountUserBo;
 import org.dows.auth.api.constant.UserConstants;
 import org.dows.auth.api.exception.AuthException;
 import org.dows.auth.api.utils.StringUtils;
 import org.dows.auth.biz.context.SecurityUtils;
 import org.dows.auth.bo.LoginBodyBo;
+import org.dows.auth.form.MiniAppLoginBodyForm;
 import org.dows.auth.service.LoginService;
 import org.dows.auth.vo.AccountVo;
 import org.dows.auth.vo.AppInfoVo;
@@ -17,15 +22,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Random;
 
-@Configuration
+@RequiredArgsConstructor
+@Slf4j
+@Service
 public class UserDetailsServiceBiz{
 
-    @Autowired
     private LoginService loginService;
+
+    private AccountUserApi accountUserApi;
 
 //    @Bean
 //    public UserDetailsService userDetailsService() {
@@ -144,12 +153,13 @@ public class UserDetailsServiceBiz{
      * @param openid
      * @return
      */
-    public LoginUserVo login(String openid)
+    public LoginUserVo loginWxMiniApp(String openid, MiniAppLoginBodyForm form)
     {
         // 查询用户信息
         LoginBodyBo bodyBo = new LoginBodyBo();
         bodyBo.setAccountType(4);
         bodyBo.setOpenid(openid);
+        bodyBo.setStoreId(form.getStoreId());
         AccountVo accountVo = null;
         List<AccountVo> accountVos = loginService.selectAccountPage(bodyBo);
 
@@ -160,10 +170,14 @@ public class UserDetailsServiceBiz{
             wxUser.setOpenid(openid);
             wxUser.setAccountName(wxUserNo);
             wxUser.setAccountId(IdWorker.getIdStr());
-            wxUser.setSource("wx");
+            wxUser.setSource("weixin");
             wxUser.setOpenid(openid);
             wxUser.setAccountType(4); // 流量用户
-            loginService.saveWxAccount(wxUser);
+            wxUser.setMerchantAccountId(form.getMerchantAccountId());
+            wxUser.setStoreId(form.getStoreId());
+            int maxUserNo = loginService.selectMaxStoreUserNo(wxUser);
+            wxUser.setUserNo(maxUserNo + 1);
+            loginService.saveMiniAppUserAccount(wxUser);
             accountVo = wxUser;
         }
         else {
@@ -186,6 +200,7 @@ public class UserDetailsServiceBiz{
         userInfo.setShengXiao(accountVo.getShengXiao());
         userInfo.setConstellation(accountVo.getConstellation());
         userInfo.setCreateTime(accountVo.getCreateTime());
+        userInfo.setOpenid(openid);
         //线程塞入租户ID
         SecurityUtils.setTenantId(userInfo.getTenantId());
         // 用户AccountId
@@ -212,11 +227,12 @@ public class UserDetailsServiceBiz{
      * @param userId
      * @return
      */
-    public LoginUserVo loginAliMiniApp(String userId) {
+    public LoginUserVo loginAliMiniApp(String userId, MiniAppLoginBodyForm form) {
         // 查询用户信息
         LoginBodyBo bodyBo = new LoginBodyBo();
         bodyBo.setAccountType(4);
         bodyBo.setUserId(userId);
+        bodyBo.setStoreId(form.getStoreId());
         AccountVo accountVo = null;
         List<AccountVo> accountVos = loginService.selectAccountPage(bodyBo);
 
@@ -226,17 +242,17 @@ public class UserDetailsServiceBiz{
             aliUser.setUserId(userId);
             aliUser.setAccountName(aliUserNo);
             aliUser.setAccountId(IdWorker.getIdStr());
-            aliUser.setSource("ali");
+            aliUser.setSource("alipay");
             aliUser.setAccountType(4); // 流量用户
-            loginService.saveWxAccount(aliUser);
+            aliUser.setMerchantAccountId(form.getMerchantAccountId());
+            aliUser.setStoreId(form.getStoreId());
+            int maxUserNo = loginService.selectMaxStoreUserNo(aliUser);
+            aliUser.setUserNo(maxUserNo + 1);
+            loginService.saveMiniAppUserAccount(aliUser);
             accountVo = aliUser;
         } else {
             accountVo = accountVos.get(0);
         }
-        return setUserInfo(accountVo);
-    }
-
-    private static LoginUserVo setUserInfo(AccountVo accountVo) {
         LoginUserVo userInfo = new LoginUserVo();
         userInfo.setAccountId(accountVo.getAccountId());
         userInfo.setTenantId(accountVo.getTenantId());
@@ -254,23 +270,11 @@ public class UserDetailsServiceBiz{
         userInfo.setShengXiao(accountVo.getShengXiao());
         userInfo.setConstellation(accountVo.getConstellation());
         userInfo.setCreateTime(accountVo.getCreateTime());
+        userInfo.setUserId(userId);
         //线程塞入租户ID
         SecurityUtils.setTenantId(userInfo.getTenantId());
         // 用户AccountId
         SecurityUtils.setAccountId(userInfo.getAccountId());
-        //先查询是否被停用了租户
-//        if (userInfo.getTenantStatus() != null && UserStatus.DISABLE.getCode().equals(userInfo.getTenantStatus().toString()))
-//        {
-//            recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, "当前租户已经被停用，请联系管理员");
-//            throw new ServiceException("当前租户已经被停用");
-//        }
-//        if (userInfo.getTenantEndDate() != null && userInfo.getTenantEndDate().compareTo(new Date()) < 0)
-//        {
-//            recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, "当前租户已超过租赁日期，请联系管理员");
-//            throw new ServiceException("当前租户已超过租赁日期");
-//        }
-
-        //  passwordServiceBiz.validate(userInfo, password);
         return userInfo;
     }
 
@@ -286,5 +290,11 @@ public class UserDetailsServiceBiz{
     // 获取8为随机编码
     public String genRandomNum()
     { int  maxNum = 36; int i; int count = 0; char[] str = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }; StringBuffer pwd = new StringBuffer(""); Random r = new Random(); while(count < 8){ i = Math.abs(r.nextInt(maxNum)); if (i >= 0 && i < str.length) { pwd.append(str[i]); count ++; } } return pwd.toString();
+    }
+
+    public String getMerchantAccountIdByAppId(String appId) {
+        AccountUserBo accountUserBo = new AccountUserBo();
+        accountUserBo.setAppId(appId);
+        return accountUserApi.getAccountUser(accountUserBo).getData().getAccountId();
     }
 }

@@ -44,7 +44,7 @@ public class TenantUserLoginRest {
         try{
             // 用户登录
             LoginUserVo vo =userDetailsServiceBiz.login(form.getUserName(),form.getPassword(),3);
-            return Response.ok(tokenServiceBiz.createToken(vo));
+            return Response.ok(tokenServiceBiz.createToken(vo, 3));
         }catch (Exception e){
             return Response.fail(e.getMessage());
         }

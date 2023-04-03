@@ -18,14 +18,12 @@ import org.dows.auth.biz.context.SecurityUtils;
 import org.dows.auth.biz.redis.TokenServiceBiz;
 import org.dows.auth.enums.MiniAppType;
 import org.dows.auth.form.LoginBodyForm;
+import org.dows.auth.form.MiniAppLoginBodyForm;
 import org.dows.auth.utils.GetOpenIdUtil;
 import org.dows.auth.vo.AppInfoVo;
 import org.dows.auth.vo.LoginUserVo;
 import org.dows.framework.api.Response;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -53,7 +51,7 @@ public class UserLoginRest {
 
     @PostMapping("/login")
     @ApiOperation(value = "登录")
-    public Response login(@RequestBody LoginBodyForm form)
+    public Response login(@RequestBody MiniAppLoginBodyForm form)
     {
         try{
 
@@ -74,8 +72,8 @@ public class UserLoginRest {
                     return Response.fail("网络异常");
                 }
                 // 用户登录
-                LoginUserVo vo =userDetailsServiceBiz.login(openid);
-                return Response.ok(tokenServiceBiz.createToken(vo));
+                LoginUserVo vo =userDetailsServiceBiz.loginWxMiniApp(openid, form);
+                return Response.ok(tokenServiceBiz.createToken(vo, 4));
             } else if (MiniAppType.ALIPAY_MINI_APP.name().equals(form.getMiniAppType())) {
 
                 // todo 根据appid查询公钥和私钥
@@ -94,8 +92,8 @@ public class UserLoginRest {
                             response.getCode(), response.getMsg());
                 }
                 // 用户登录
-                LoginUserVo vo = userDetailsServiceBiz.loginAliMiniApp(response.getUserId());
-                return Response.ok(tokenServiceBiz.createToken(vo));
+                LoginUserVo vo = userDetailsServiceBiz.loginAliMiniApp(response.getUserId(), form);
+                return Response.ok(tokenServiceBiz.createToken(vo, 4));
             }
             return Response.fail("小程序类型参数错误");
         }catch (Exception e){
@@ -119,5 +117,12 @@ public class UserLoginRest {
             return Response.fail("退出失败,系统错误");
         }
     }
+
+    @GetMapping("/getMerchantAccountIdByAppId")
+    @ApiOperation(value = "根据appId获取商户账号id")
+    public Response<String> getMerchantAccountIdByAppId(@RequestParam String appId){
+        return Response.ok(userDetailsServiceBiz.getMerchantAccountIdByAppId(appId));
+    }
+
 }
 

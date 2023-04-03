@@ -18,7 +18,9 @@ public interface LoginService {
     // public Response login(String username, String password);
     List<AccountVo> selectAccountPage(LoginBodyBo loginBodyBo);
 
-    void saveWxAccount(AccountVo accountVo);
+    void saveMiniAppUserAccount(AccountVo accountVo);
 
     List<AppInfoVo> selectAppInfo(LoginBodyBo loginBodyBo);
+
+    int selectMaxStoreUserNo(AccountVo accountVo);
 }
