@@ -27,13 +27,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Random;
 
-@RequiredArgsConstructor
-@Slf4j
-@Service
+@Configuration
 public class UserDetailsServiceBiz{
 
+    @Autowired
     private LoginService loginService;
 
+    @Autowired
     private AccountUserApi accountUserApi;
 
 //    @Bean
