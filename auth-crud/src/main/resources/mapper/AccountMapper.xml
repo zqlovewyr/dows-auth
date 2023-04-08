@@ -84,7 +84,6 @@
         t1.secret_key,
         t1.app_key,
         t1.app_id,
-        t1.accountId,
         t1.account_id,
         t1.tenant_name,
         t1.tenant_id

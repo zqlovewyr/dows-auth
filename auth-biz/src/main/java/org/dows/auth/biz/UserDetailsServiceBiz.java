@@ -27,13 +27,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Random;
 
-@Configuration
+@RequiredArgsConstructor
+@Slf4j
+@Service
 public class UserDetailsServiceBiz{
 
-    @Autowired
     private LoginService loginService;
 
-    @Autowired
     private AccountUserApi accountUserApi;
 
 //    @Bean
@@ -144,7 +144,7 @@ public class UserDetailsServiceBiz{
 //            throw new ServiceException("当前租户已超过租赁日期");
 //        }
 
-       //  passwordServiceBiz.validate(userInfo, password);
+        //  passwordServiceBiz.validate(userInfo, password);
         return userInfo;
     }
 

@@ -59,12 +59,12 @@ public class UserLoginRest {
             if(appInfoVo == null){
                 return Response.fail("此商户未配置");
             }
-            if (MiniAppType.WEIXIN_MINI_APP.name().equals(form.getMiniAppType())) {
+            if (MiniAppType.WEIXIN_MINI_APP == form.getMiniAppType()) {
 //                WxMaProperties.Config config = wxMaProperties.getConfigs().get(0);
 //                final WxMaService wxService = WxMaConfiguration.getMaService(config.getAppid());
 //                WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(form.getCode());
                 GetOpenIdUtil getOpenIdUtil=new GetOpenIdUtil();
-                String jsonId = getOpenIdUtil.getopenid(appInfoVo.getAppId(),form.getCode(),appInfoVo.getSecretKey());
+                String jsonId = getOpenIdUtil.getOpenid(appInfoVo.getAppId(),form.getCode(),appInfoVo.getSecretKey());
                 JSONObject jsonObject = JSONObject.parseObject(jsonId);
                 String openid = jsonObject.get("openid").toString();
                 if(StringUtils.isNull(openid)){
@@ -74,7 +74,7 @@ public class UserLoginRest {
                 // 用户登录
                 LoginUserVo vo =userDetailsServiceBiz.loginWxMiniApp(openid, form);
                 return Response.ok(tokenServiceBiz.createToken(vo, 4));
-            } else if (MiniAppType.ALIPAY_MINI_APP.name().equals(form.getMiniAppType())) {
+            } else if (MiniAppType.ALIPAY_MINI_APP == form.getMiniAppType()) {
 
                 // todo 根据appid查询公钥和私钥
                 String appPrivateKey = "";

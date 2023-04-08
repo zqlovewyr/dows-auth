@@ -77,7 +77,7 @@ public class TokenServiceBiz
         rspMap.put("accountId", loginUser.getAccountId());
         if (accountType == 4) {
             Optional.ofNullable(loginUser.getOpenid()).ifPresent(value -> rspMap.put("openid", value));
-            Optional.ofNullable(loginUser.getOpenid()).ifPresent(value -> rspMap.put("userId", value));
+            Optional.ofNullable(loginUser.getUserId()).ifPresent(value -> rspMap.put("userId", value));
         }
         return rspMap;
     }
